@@ -656,17 +656,7 @@
     }
 
     function clearAllData() {
-        // איפוס פרטים אישיים והסרת שגיאות
-        const personalFields = ['first-name', 'last-name', 'workplace', 'job-role'];
-        personalFields.forEach(id => {
-            const el = document.getElementById(id);
-            el.value = "";
-            el.classList.remove('border-red-500', 'ring-red-500', 'bg-red-50');
-            el.classList.add('border-slate-300', 'focus:ring-blue-500', 'focus:border-blue-500');
-        });
-        document.getElementById('personal-error-msg').classList.add('hidden');
-
-        // איפוס נתוני המחשבון
+        // איפוס נתוני המחשבון (טופס ההזנה) בלבד
         document.getElementById('global-salary').value = "";
         document.getElementById('hourly-wage').value = "";
         document.getElementById('credit-points').value = "2.25";
@@ -702,10 +692,10 @@
         });
         document.getElementById('calc-error-msg').classList.add('hidden');
 
-        // חזרה חלקה למסך ההתחלה הראשי
+        // השארת המשתמש באותו דף הזנה
         document.getElementById('step-result').classList.add('hidden');
-        document.getElementById('step-input').classList.add('hidden');
-        document.getElementById('step-personal').classList.remove('hidden');
+        document.getElementById('step-personal').classList.add('hidden');
+        document.getElementById('step-input').classList.remove('hidden');
         
         switchTab('manual');
         window.scrollTo({ top: 0, behavior: 'smooth' });
