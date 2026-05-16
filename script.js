@@ -466,3 +466,42 @@ window.onload = function () {
     // הצגת הדף הראשון בעת טעינה
     showPage(1);
 };
+
+// --- הפעלת מקש Enter למעבר בין שדות (כמו Tab) ---
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+        const active = document.activeElement;
+
+        // אנחנו מתערבים רק אם המשתמש נמצא בתוך שדה קלט
+        if (active.tagName === 'INPUT') {
+            e.preventDefault(); // מניעת התנהגות ברירת מחדל כמו ריענון העמוד
+
+            const currentPageEl = document.getElementById('page-' + currentPage);
+            if (!currentPageEl) return;
+
+            // שולפים את כל שדות הקלט שגלויים כרגע בדף הנוכחי
+            const inputs = Array.from(currentPageEl.querySelectorAll('input')).filter(el => el.offsetParent !== null && !el.disabled);
+            const currentIndex = inputs.indexOf(active);
+
+            if (currentIndex > -1) {
+                if (currentIndex < inputs.length - 1) {
+                    // אם זה לא השדה האחרון, קפוץ לשדה הבא
+                    inputs[currentIndex + 1].focus();
+                } else {
+                    // אם זה השדה האחרון, לחץ אוטומטית על הכפתור המרכזי של הדף (המשך / חשב)
+                    if (currentPage === 4) {
+                        validateAndCalculate();
+                    } else if (currentPage < 5) {
+                        validateAndNext(currentPage);
+                    }
+                }
+            }
+        }
+    }
+});
+
+window.onload = function () {
+    addTimeRow();
+    // הצגת הדף הראשון בעת טעינה
+    showPage(1);
+};

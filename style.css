@@ -1,60 +1,80 @@
-  /* עיצוב כללי */
+        /* עיצוב כללי */
 
-  /* אנימציית מעבר בין דפים */
-  .page-step {
-      animation: fadeIn 0.4s ease-in-out;
-  }
+        /* אנימציית מעבר בין דפים */
+        
+        .page-step {
+            animation: fadeIn 0.4s ease-in-out;
+        }
 
-  @keyframes fadeIn {
-      from {
-          opacity: 0;
-          transform: translateY(10px);
-      }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
 
-      to {
-          opacity: 1;
-          transform: translateY(0);
-      }
-  }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-  /* הגדרות עיצוב להדפסה בלבד */
-  @media print {
-      body {
-          background-color: white;
-          padding: 0;
-      }
+        /* הגדרות עיצוב להדפסה בלבד */
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+            }
 
-      .no-print {
-          display: none !important;
-      }
+            .no-print {
+                display: none !important;
+            }
 
-      .print-only {
-          display: block !important;
-      }
+            .print-only {
+                display: block !important;
+            }
 
-      .container {
-          box-shadow: none;
-          max-width: 100%;
-          padding: 0;
-          margin: 0;
-          border: none;
-      }
+            .container {
+                box-shadow: none;
+                max-width: 100%;
+                padding: 0;
+                margin: 0;
+                border: none;
+            }
 
-      #page-5 {
-          display: block !important;
-          border: 2px solid #000 !important;
-          padding: 30px !important;
-          background-color: white !important;
-      }
+            #page-5 {
+                display: block !important;
+                border: 2px solid #000 !important;
+                padding: 30px !important;
+                background-color: white !important;
+            }
 
-      .page-step {
-          animation: none;
-      }
-  }
+            .page-step {
+                animation: none;
+            }
+        }
 
-  /* עיצוב מותאם לטאבים פנימיים */
-  .tab-btn.active {
-      background-color: #10b981;
-      color: white;
-      border-color: #10b981;
-    }
+        /* עיצוב מותאם לטאבים פנימיים */
+        .tab-btn.active {
+            background-color: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        /* עיצוב פס גלילה מותאם לתיבת התלוש */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(16, 185, 129, 0.5);
+        }

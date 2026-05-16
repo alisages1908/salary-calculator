@@ -359,10 +359,10 @@
         </div>
 
         <!-- ==================== PAGE 5: תלוש תוצאה (מופיע כדף עצמאי) ==================== -->
-        <div id="page-5" class="page-step hidden p-2 bg-emerald-50/30 rounded-xl relative transition-all duration-300">
+        <div id="page-5" class="page-step hidden relative transition-all duration-300">
 
             <button
-                class="no-print mb-6 text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-2 transition-colors bg-white px-4 py-2 rounded-lg shadow-sm border border-emerald-200"
+                class="no-print mb-4 text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-2 transition-colors bg-white px-4 py-2 rounded-lg shadow-sm border border-emerald-200"
                 onclick="prevPage(5)">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd"
@@ -372,107 +372,117 @@
                 חזור אחורה לעריכת הנתונים
             </button>
 
-            <h3 class="text-2xl font-bold text-center text-emerald-800 mb-6 border-b border-emerald-200 pb-4">תלוש שכר
-                (סיכום)</h3>
+            <!-- תיבת גלילה פנימית לתלוש השכר -->
+            <div
+                class="max-h-[60vh] overflow-y-auto custom-scrollbar bg-emerald-50/30 p-4 md:p-6 rounded-xl border border-emerald-100 shadow-inner print:max-h-none print:overflow-visible print:border-none print:shadow-none print:bg-transparent print:p-0">
 
-            <div class="bg-white p-4 rounded-lg border border-emerald-100 shadow-sm mb-6 print-only-border">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-slate-800">
-                    <div><span class="font-bold text-slate-500">שם העובד/ת:</span> <span id="res-emp-name"
-                            class="font-semibold">-</span></div>
-                    <div><span class="font-bold text-slate-500">מקום עבודה:</span> <span id="res-emp-workplace"
-                            class="font-semibold">-</span></div>
-                    <div><span class="font-bold text-slate-500">תפקיד:</span> <span id="res-emp-role"
-                            class="font-semibold">-</span></div>
-                    <div class="print-only hidden"><span class="font-bold text-slate-500">חודש משכורת:</span> <span>___
-                            / 20__</span></div>
-                </div>
-            </div>
+                <h3 class="text-2xl font-bold text-center text-emerald-800 mb-6 border-b border-emerald-200 pb-4">תלוש
+                    שכר
+                    (סיכום)</h3>
 
-            <div class="space-y-2 text-slate-700 px-2">
-                <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
-                    <span class="font-medium">שכר ברוטו בסיס:</span>
-                    <span id="res-base-gross" class="font-semibold text-slate-900">0 ₪</span>
-                </div>
-
-                <div id="row-unpaid-deduction"
-                    class="hidden justify-between pb-2 border-b border-dashed border-emerald-200 text-red-600">
-                    <span>ימי היעדרות (קיזוז):</span>
-                    <span id="res-unpaid" class="font-semibold">-0 ₪</span>
+                <div class="bg-white p-4 rounded-lg border border-emerald-100 shadow-sm mb-6 print-only-border">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-slate-800">
+                        <div><span class="font-bold text-slate-500">שם העובד/ת:</span> <span id="res-emp-name"
+                                class="font-semibold">-</span></div>
+                        <div><span class="font-bold text-slate-500">מקום עבודה:</span> <span id="res-emp-workplace"
+                                class="font-semibold">-</span></div>
+                        <div><span class="font-bold text-slate-500">תפקיד:</span> <span id="res-emp-role"
+                                class="font-semibold">-</span></div>
+                        <div class="print-only hidden"><span class="font-bold text-slate-500">חודש משכורת:</span>
+                            <span>___
+                                / 20__</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200 pt-2">
-                    <span>שכר שעתי:</span>
-                    <span id="res-hourly-rate" class="font-semibold">0 ₪</span>
-                </div>
-                <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
-                    <span>סה"כ ימי עבודה:</span>
-                    <span id="res-total-days" class="font-semibold">0</span>
-                </div>
-                <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
-                    <span>סה"כ שעות רגילות (100%):</span>
-                    <span id="res-total-hours" class="font-semibold">0</span>
+                <div class="space-y-2 text-slate-700 px-2">
+                    <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
+                        <span class="font-medium">שכר ברוטו בסיס:</span>
+                        <span id="res-base-gross" class="font-semibold text-slate-900">0 ₪</span>
+                    </div>
+
+                    <div id="row-unpaid-deduction"
+                        class="hidden justify-between pb-2 border-b border-dashed border-emerald-200 text-red-600">
+                        <span>ימי היעדרות (קיזוז):</span>
+                        <span id="res-unpaid" class="font-semibold">-0 ₪</span>
+                    </div>
+
+                    <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200 pt-2">
+                        <span>שכר שעתי:</span>
+                        <span id="res-hourly-rate" class="font-semibold">0 ₪</span>
+                    </div>
+                    <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
+                        <span>סה"כ ימי עבודה:</span>
+                        <span id="res-total-days" class="font-semibold">0</span>
+                    </div>
+                    <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
+                        <span>סה"כ שעות רגילות (100%):</span>
+                        <span id="res-total-hours" class="font-semibold">0</span>
+                    </div>
+
+                    <div id="row-ot-125" class="hidden justify-between pb-2 border-b border-dashed border-emerald-200">
+                        <span>שעות נוספות (125%):</span>
+                        <span id="res-ot-125" class="font-semibold text-amber-600">0</span>
+                    </div>
+                    <div id="row-ot-150" class="hidden justify-between pb-2 border-b border-dashed border-emerald-200">
+                        <span>שעות נוספות (150%):</span>
+                        <span id="res-ot-150" class="font-semibold text-red-600">0</span>
+                    </div>
+                    <div id="row-overtime"
+                        class="hidden justify-between pb-2 border-b border-dashed border-emerald-200 bg-amber-50 p-1 rounded">
+                        <span class="font-medium text-amber-800">תוספת שעות נוספות:</span>
+                        <span id="res-overtime" class="font-bold text-amber-700">0 ₪</span>
+                    </div>
+
+                    <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200 pt-2">
+                        <span>דמי חופשה:</span>
+                        <span id="res-vacation" class="font-semibold text-emerald-700">0 ₪</span>
+                    </div>
+                    <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
+                        <span>דמי מחלה:</span>
+                        <span id="res-sick" class="font-semibold text-emerald-700">0 ₪</span>
+                    </div>
+                    <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
+                        <span>החזר נסיעות:</span>
+                        <span id="res-travel" class="font-semibold text-emerald-700">0 ₪</span>
+                    </div>
+
+                    <div class="flex justify-between p-3 mt-4 bg-white border border-emerald-300 rounded-lg shadow-sm">
+                        <span class="font-bold text-lg">סה"כ שכר ברוטו לתשלום:</span>
+                        <span id="res-gross" class="font-bold text-lg text-emerald-800">0 ₪</span>
+                    </div>
+
+                    <h4 class="font-bold text-slate-800 mt-6 mb-2 border-b border-slate-200 pb-1">ניכויי חובה</h4>
+                    <div class="flex justify-between pb-2 border-b border-dashed border-red-100 text-red-600">
+                        <span>מס הכנסה:</span>
+                        <span id="res-tax" class="font-semibold">-0 ₪</span>
+                    </div>
+                    <div class="flex justify-between pb-2 border-b border-dashed border-red-100 text-red-600">
+                        <span>ביטוח לאומי:</span>
+                        <span id="res-btl" class="font-semibold">-0 ₪</span>
+                    </div>
+                    <div class="flex justify-between pb-2 border-b border-dashed border-red-100 text-red-600">
+                        <span>מס בריאות:</span>
+                        <span id="res-health" class="font-semibold">-0 ₪</span>
+                    </div>
+
+                    <h4 class="font-bold text-slate-800 mt-4 mb-2 border-b border-slate-200 pb-1">ניכויי רשות</h4>
+                    <div class="flex justify-between pb-2 border-b border-dashed border-red-100 text-red-600">
+                        <span>שונות:</span>
+                        <span id="res-other" class="font-semibold">-0 ₪</span>
+                    </div>
+
+                    <div
+                        class="flex justify-between p-4 mt-6 bg-emerald-600 text-white rounded-xl shadow-lg items-center">
+                        <span class="font-bold text-xl">שכר נטו לתשלום:</span>
+                        <span id="res-net" class="font-black text-3xl">0 ₪</span>
+                    </div>
                 </div>
 
-                <div id="row-ot-125" class="hidden justify-between pb-2 border-b border-dashed border-emerald-200">
-                    <span>שעות נוספות (125%):</span>
-                    <span id="res-ot-125" class="font-semibold text-amber-600">0</span>
-                </div>
-                <div id="row-ot-150" class="hidden justify-between pb-2 border-b border-dashed border-emerald-200">
-                    <span>שעות נוספות (150%):</span>
-                    <span id="res-ot-150" class="font-semibold text-red-600">0</span>
-                </div>
-                <div id="row-overtime"
-                    class="hidden justify-between pb-2 border-b border-dashed border-emerald-200 bg-amber-50 p-1 rounded">
-                    <span class="font-medium text-amber-800">תוספת שעות נוספות:</span>
-                    <span id="res-overtime" class="font-bold text-amber-700">0 ₪</span>
-                </div>
-
-                <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200 pt-2">
-                    <span>דמי חופשה:</span>
-                    <span id="res-vacation" class="font-semibold text-emerald-700">0 ₪</span>
-                </div>
-                <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
-                    <span>דמי מחלה:</span>
-                    <span id="res-sick" class="font-semibold text-emerald-700">0 ₪</span>
-                </div>
-                <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
-                    <span>החזר נסיעות:</span>
-                    <span id="res-travel" class="font-semibold text-emerald-700">0 ₪</span>
-                </div>
-
-                <div class="flex justify-between p-3 mt-4 bg-white border border-emerald-300 rounded-lg shadow-sm">
-                    <span class="font-bold text-lg">סה"כ שכר ברוטו לתשלום:</span>
-                    <span id="res-gross" class="font-bold text-lg text-emerald-800">0 ₪</span>
-                </div>
-                
-                <h4 class="font-bold text-slate-800 mt-6 mb-2 border-b border-slate-200 pb-1">ניכויי חובה</h4>
-                <div class="flex justify-between pb-2 border-b border-dashed border-red-100 text-red-600">
-                    <span>מס הכנסה:</span>
-                    <span id="res-tax" class="font-semibold">-0 ₪</span>
-                </div>
-                <div class="flex justify-between pb-2 border-b border-dashed border-red-100 text-red-600">
-                    <span>ביטוח לאומי:</span>
-                    <span id="res-btl" class="font-semibold">-0 ₪</span>
-                </div>
-                <div class="flex justify-between pb-2 border-b border-dashed border-red-100 text-red-600">
-                    <span>מס בריאות:</span>
-                    <span id="res-health" class="font-semibold">-0 ₪</span>
-                </div>
-
-                <h4 class="font-bold text-slate-800 mt-4 mb-2 border-b border-slate-200 pb-1">ניכויי רשות</h4>
-                <div class="flex justify-between pb-2 border-b border-dashed border-red-100 text-red-600">
-                    <span>שונות:</span>
-                    <span id="res-other" class="font-semibold">-0 ₪</span>
-                </div>
-
-                <div class="flex justify-between p-4 mt-6 bg-emerald-600 text-white rounded-xl shadow-lg items-center">
-                    <span class="font-bold text-xl">שכר נטו לתשלום:</span>
-                    <span id="res-net" class="font-black text-3xl">0 ₪</span>
-                </div>
-            </div>
+            </div> <!-- סיום תיבת גלילה פנימית -->
 
             <button
-                class="no-print w-full mt-8 py-4 bg-slate-700 hover:bg-slate-800 text-white font-medium text-lg rounded-xl transition-colors flex items-center justify-center gap-2 shadow-md"
+                class="no-print w-full mt-6 py-4 bg-slate-700 hover:bg-slate-800 text-white font-medium text-lg rounded-xl transition-colors flex items-center justify-center gap-2 shadow-md"
                 onclick="window.print()">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
