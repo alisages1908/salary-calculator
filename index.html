@@ -17,7 +17,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-        /* עיצוב כללי */
+         /* עיצוב כללי */
 
         /* אנימציית מעבר בין דפים */
 
@@ -97,991 +97,1002 @@
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: rgba(16, 185, 129, 0.5);
         }
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .step-hidden {
+            display: none;
+        }
+
+        .payslip-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .payslip-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .payslip-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .payslip-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
     </style>
 </head>
 
-<body class="bg-slate-50 text-slate-800 font-sans antialiased p-4 md:p-8 min-h-screen flex items-center justify-center">
+<body class="text-gray-800 p-4 md:p-8 flex justify-center items-start min-h-screen">
+
+    <!-- Beautiful Slide-up Toast Notification -->
+    <div id="toast-msg"
+        class="fixed bottom-6 right-6 bg-slate-900 border border-slate-800 text-white p-5 rounded-2xl shadow-2xl transform translate-y-32 opacity-0 transition-all duration-500 z-50 max-w-md">
+        <div class="flex items-start gap-3">
+            <div class="p-1 rounded-lg bg-slate-800" id="toast-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-400" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div id="toast-text" class="text-sm"></div>
+        </div>
+    </div>
 
     <div
-        class="w-full max-w-3xl mx-auto bg-white p-6 md:p-8 rounded-2xl shadow-xl border border-slate-100 container relative overflow-hidden">
+        class="w-full max-w-4xl bg-white rounded-2xl shadow-xl p-6 md:p-10 container border border-gray-100 relative flex flex-col min-h-[600px] justify-between overflow-hidden">
 
-        <div class="text-center mb-8 no-print" id="main-header">
-            <h1 class="text-3xl font-bold text-slate-800 mb-2">🧮 מחשבון שכר</h1>
-            <p class="text-slate-500">חישוב מדויק של שכר נטו, ברוטו וניכויים</p>
-        </div>
+        <div>
+            <!-- Header -->
+            <div class="text-center mb-8 no-print">
+                <h1 class="text-5xl font-black text-slate-800 mb-4 flex justify-center items-center gap-3">
+                    מחשבון שכר <span
+                        class="text-4xl bg-amber-100 p-2 rounded-xl shadow-sm border border-amber-200">🧮</span>
+                </h1>
+                <p class="text-slate-500 font-bold text-lg">חישוב מדויק של שכר נטו, ברוטו וניכויים</p>
+            </div>
 
-        <!-- סרגל התקדמות (Progress Bar) - כעת 4 שלבים -->
-        <div class="flex items-center justify-between no-print relative mb-12 mt-4 px-2 sm:px-6" id="wizard-progress">
-            <!-- קו אפור אחורי -->
-            <div class="absolute left-0 top-5 w-full h-1 bg-slate-200 -z-10 rounded-full"></div>
-            <!-- קו התקדמות כחול -->
-            <div class="absolute right-0 top-5 h-1 bg-blue-500 -z-10 transition-all duration-500 ease-out rounded-full"
-                id="progress-line" style="width: 0%;"></div>
-
-            <!-- מחוונים (Indicators) -->
-            <div class="flex flex-col items-center relative z-10" id="indicator-1">
+            <!-- Wizard Tracker -->
+            <div class="mb-12 relative no-print px-4" id="wizard-tracker">
                 <div
-                    class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold shadow-md border-4 border-white transition-colors duration-300">
-                    1</div>
-                <span
-                    class="text-xs mt-2 font-bold text-blue-700 absolute -bottom-6 w-20 text-center transition-colors">פרטים</span>
+                    class="absolute left-8 right-8 top-1/2 transform -translate-y-1/2 h-1 bg-slate-100 z-0 rounded-full">
+                </div>
+                <div class="flex justify-between items-center relative z-10">
+                    <button onclick="attemptGoToStep(1)"
+                        class="flex flex-col items-center group cursor-pointer focus:outline-none">
+                        <div id="ind-1"
+                            class="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold bg-blue-600 text-white transition-all ring-8 ring-blue-100 shadow-lg scale-110">
+                            1</div>
+                        <span id="ind-text-1" class="mt-3 text-sm font-bold text-blue-700">פרטים</span>
+                    </button>
+                    <button onclick="attemptGoToStep(2)"
+                        class="flex flex-col items-center group cursor-pointer focus:outline-none">
+                        <div id="ind-2"
+                            class="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold bg-slate-200 text-slate-400 transition-all shadow-inner">
+                            2</div>
+                        <span id="ind-text-2" class="mt-3 text-sm font-semibold text-slate-400">בסיס</span>
+                    </button>
+                    <button onclick="attemptGoToStep(3)"
+                        class="flex flex-col items-center group cursor-pointer focus:outline-none">
+                        <div id="ind-3"
+                            class="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold bg-slate-200 text-slate-400 transition-all shadow-inner">
+                            3</div>
+                        <span id="ind-text-3" class="mt-3 text-sm font-semibold text-slate-400">שעות</span>
+                    </button>
+                    <button onclick="attemptGoToStep(4)"
+                        class="flex flex-col items-center group cursor-pointer focus:outline-none">
+                        <div id="ind-4"
+                            class="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold bg-slate-200 text-slate-400 transition-all shadow-inner">
+                            4</div>
+                        <span id="ind-text-4" class="mt-3 text-sm font-semibold text-slate-400">תוספות</span>
+                    </button>
+                </div>
             </div>
-            <div class="flex flex-col items-center relative z-10" id="indicator-2">
+
+            <div id="global-error"
+                class="hidden mb-6 p-4 bg-red-50 text-red-600 border border-red-200 rounded-lg text-center font-bold no-print">
+                נא למלא את כל שדות החובה בעברית או להשלים את הנתונים כדי להמשיך.
+            </div>
+
+            <!-- ==================== STEP 1 ==================== -->
+            <div id="step-1" class="step-content">
                 <div
-                    class="w-10 h-10 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center font-bold shadow-sm border-4 border-white transition-colors duration-300">
-                    2</div>
-                <span
-                    class="text-xs mt-2 font-medium text-slate-400 absolute -bottom-6 w-20 text-center transition-colors">בסיס</span>
-            </div>
-            <div class="flex flex-col items-center relative z-10" id="indicator-3">
-                <div
-                    class="w-10 h-10 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center font-bold shadow-sm border-4 border-white transition-colors duration-300">
-                    3</div>
-                <span
-                    class="text-xs mt-2 font-medium text-slate-400 absolute -bottom-6 w-20 text-center transition-colors">שעות</span>
-            </div>
-            <div class="flex flex-col items-center relative z-10" id="indicator-4">
-                <div
-                    class="w-10 h-10 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center font-bold shadow-sm border-4 border-white transition-colors duration-300">
-                    4</div>
-                <span
-                    class="text-xs mt-2 font-medium text-slate-400 absolute -bottom-6 w-20 text-center transition-colors">תוספות</span>
-            </div>
-        </div>
-
-        <!-- ==================== PAGE 1: פרטים אישיים ==================== -->
-        <div id="page-1" class="page-step block no-print">
-            <div class="bg-blue-50 p-3 rounded-lg mb-6 font-semibold text-blue-800 text-lg border-r-4 border-blue-500">
-                שלב 1: פרטים אישיים
-            </div>
-
-            <p class="text-sm text-slate-600 mb-4">נא למלא את כל השדות בעברית בלבד.</p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div>
-                    <label for="first-name" class="block mb-1 font-medium text-slate-700">שם מלא (פרטי): <span
-                            class="text-red-500">*</span></label>
-                    <input type="text" id="first-name" placeholder="הזן שם פרטי בעברית..."
-                        class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none">
+                    class="bg-blue-50 border-r-4 border-blue-600 text-blue-800 px-5 py-4 rounded-l-lg mb-8 text-xl font-bold flex items-center">
+                    שלב 1: פרטים אישיים
                 </div>
-                <div>
-                    <label for="last-name" class="block mb-1 font-medium text-slate-700">שם משפחה: <span
-                            class="text-red-500">*</span></label>
-                    <input type="text" id="last-name" placeholder="הזן שם משפחה בעברית..."
-                        class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none">
-                </div>
-                <div>
-                    <label for="workplace" class="block mb-1 font-medium text-slate-700">מקום עבודה: <span
-                            class="text-red-500">*</span></label>
-                    <input type="text" id="workplace" placeholder="הזן מקום עבודה בעברית..."
-                        class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none">
-                </div>
-                <div>
-                    <label for="job-role" class="block mb-1 font-medium text-slate-700">תפקיד: <span
-                            class="text-red-500">*</span></label>
-                    <input type="text" id="job-role" placeholder="הזן תפקיד בעברית..."
-                        class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all outline-none">
-                </div>
-            </div>
 
-            <div id="error-msg-1"
-                class="hidden text-red-600 font-bold text-center mb-6 bg-red-50 p-3 rounded-lg border border-red-200">
-                נא למלא את כל שדות החובה בעברית בלבד.
-            </div>
+                <p class="text-sm text-gray-500 mb-6 font-medium">* נא להזין בעברית בלבד</p>
 
-            <button
-                class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
-                onclick="validateAndNext(1)">
-                המשך לשלב הבא
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform rotate-180" fill="none"
-                    viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-            </button>
-        </div>
-
-        <!-- ==================== PAGE 2: נתוני בסיס ==================== -->
-        <div id="page-2" class="page-step hidden no-print">
-            <div
-                class="bg-indigo-50 p-3 rounded-lg mb-6 font-semibold text-indigo-800 text-lg border-r-4 border-indigo-500">
-                שלב 2: נתוני שכר בסיס
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-                <div>
-                    <label for="global-salary" class="block mb-1 font-medium text-slate-700">שכר ברוטו (₪): <span
-                            class="text-red-500">*</span></label>
-                    <input type="number" id="global-salary" placeholder="0" min="0"
-                        class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
-                    <p class="text-xs text-slate-500 mt-1">הזן שכר חודשי מלא (אם יש).</p>
-                </div>
-                <div>
-                    <label for="hourly-wage" class="block mb-1 font-medium text-slate-700">שכר שעתי (₪): <span
-                            class="text-red-500">*</span></label>
-                    <input type="number" id="hourly-wage" placeholder="0" min="0"
-                        class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
-                    <p class="text-xs text-slate-500 mt-1">חובה גם לעובד גלובלי (לחישוב שעות נוספות).</p>
-                </div>
-            </div>
-
-            <div class="mb-8">
-                <label for="credit-points" class="block mb-1 font-medium text-slate-700">נקודות זיכוי (מס
-                    הכנסה):</label>
-                <input type="number" id="credit-points" value="2.25" step="0.25" min="0"
-                    class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
-            </div>
-
-            <div id="error-msg-2"
-                class="hidden text-red-600 font-bold text-center mb-6 bg-red-50 p-3 rounded-lg border border-red-200">
-                נא למלא את שדות החובה המסומנים בכוכבית.
-            </div>
-
-            <div class="flex gap-4">
-                <button
-                    class="w-1/3 py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all flex items-center justify-center gap-2"
-                    onclick="prevPage(2)">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    חזור
-                </button>
-                <button
-                    class="w-2/3 py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
-                    onclick="validateAndNext(2)">
-                    המשך לשלב הבא
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform rotate-180" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-
-        <!-- ==================== PAGE 3: שעות וימי עבודה ==================== -->
-        <div id="page-3" class="page-step hidden no-print">
-            <div class="bg-teal-50 p-3 rounded-lg mb-6 font-semibold text-teal-800 text-lg border-r-4 border-teal-500">
-                שלב 3: שעות וימי עבודה
-            </div>
-
-            <div class="flex mt-2 border-b-2 border-slate-200">
-                <button
-                    class="tab-btn active flex-1 py-3 text-center bg-slate-100 hover:bg-slate-200 cursor-pointer font-bold rounded-t-lg ml-1 transition-colors border-t border-r border-l border-slate-200"
-                    id="btn-manual" onclick="switchTab('manual')">
-                    הזנת שעות (רגיל)
-                </button>
-                <button
-                    class="tab-btn flex-1 py-3 text-center bg-slate-100 hover:bg-slate-200 cursor-pointer font-bold rounded-t-lg mr-1 transition-colors border-t border-r border-l border-slate-200"
-                    id="btn-advanced" onclick="switchTab('advanced')">
-                    הזנה יומית (טבלה)
-                </button>
-            </div>
-
-            <div id="tab-manual"
-                class="tab-content block p-5 border border-t-0 border-slate-200 bg-slate-50 rounded-b-lg mb-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label for="total-hours" class="block mb-1 font-medium text-slate-700">סה"כ שעות עבודה: <span
+                        <label class="block text-slate-700 font-bold mb-2">שם פרטי <span
                                 class="text-red-500">*</span></label>
-                        <input type="number" id="total-hours" placeholder="לדוגמה: 182" min="0"
-                            class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+                        <input type="text" id="f-name" required placeholder="הזן שם פרטי בעברית..."
+                            class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none">
                     </div>
                     <div>
-                        <label for="total-days" class="block mb-1 font-medium text-slate-700">סה"כ ימי עבודה: <span
+                        <label class="block text-slate-700 font-bold mb-2">שם משפחה <span
                                 class="text-red-500">*</span></label>
-                        <input type="number" id="total-days" placeholder="לדוגמה: 21" min="0"
-                            class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none">
+                        <input type="text" id="l-name" required placeholder="הזן שם משפחה בעברית..."
+                            class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-slate-700 font-bold mb-2">מקום עבודה <span
+                                class="text-red-500">*</span></label>
+                        <input type="text" id="workplace" required placeholder="שם החברה..."
+                            class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-slate-700 font-bold mb-2">תפקיד <span
+                                class="text-red-500">*</span></label>
+                        <input type="text" id="role" required placeholder="התפקיד שלך..."
+                            class="w-full p-3 bg-slate-50 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none">
                     </div>
                 </div>
-                <div class="text-sm text-slate-600 bg-teal-50/50 p-4 rounded-lg border border-teal-100">
-                    <strong class="text-teal-700">💡 חלוקה חכמה לפי ימי עבודה:</strong><br>
-                    המערכת מניחה שמשמרת היא עד 10 שעות. ה-8 הראשונות (100%), שתיים נוספות (125%), ואם יש חריגה מעל 10
-                    שעות בממוצע ליום - הן יחושבו כ-150%.
+
+                <div class="mt-10 flex justify-end">
+                    <button onclick="attemptGoToStep(2)"
+                        class="next-btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2 text-lg">
+                        המשך לשלב הבא <span>&larr;</span>
+                    </button>
                 </div>
             </div>
 
-            <div id="tab-advanced"
-                class="tab-content hidden p-5 border border-t-0 border-slate-200 bg-slate-50 rounded-b-lg mb-6 overflow-x-auto">
-                <p class="text-sm text-slate-600 mb-4">הזן שעות כניסה ויציאה. המערכת מחשבת אוטומטית (100%, 125%, 150%).
-                </p>
-                <table id="time-table" class="w-full text-center border-collapse mb-4 min-w-[500px]">
-                    <thead>
-                        <tr class="bg-slate-200 text-slate-700 text-sm">
-                            <th class="p-2 border-b border-slate-300 rounded-tr-md">כניסה</th>
-                            <th class="p-2 border-b border-slate-300">יציאה</th>
-                            <th class="p-2 border-b border-slate-300">סה"כ</th>
-                            <th class="p-2 border-b border-slate-300">100%</th>
-                            <th class="p-2 border-b border-slate-300">125%</th>
-                            <th class="p-2 border-b border-slate-300 rounded-tl-md">150%</th>
-                        </tr>
-                    </thead>
-                    <tbody id="time-body">
-                    </tbody>
-                </table>
-                <button
-                    class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-bold transition-colors shadow-sm"
-                    onclick="addTimeRow()">+ הוסף יום עבודה</button>
-
+            <!-- ==================== STEP 2 ==================== -->
+            <div id="step-2" class="step-content step-hidden">
                 <div
-                    class="mt-4 p-3 bg-white border border-slate-200 rounded-lg font-bold text-slate-700 flex flex-wrap gap-4 items-center justify-between shadow-sm">
-                    <span>סה"כ:</span>
-                    <span class="text-emerald-600 bg-emerald-50 px-2 py-1 rounded">רגיל: <span
-                            id="calc-reg">0.00</span></span>
-                    <span class="text-amber-500 bg-amber-50 px-2 py-1 rounded">125%: <span
-                            id="calc-125">0.00</span></span>
-                    <span class="text-red-500 bg-red-50 px-2 py-1 rounded">150%: <span id="calc-150">0.00</span></span>
+                    class="bg-indigo-50 border-r-4 border-indigo-600 text-indigo-800 px-5 py-4 rounded-l-lg mb-8 text-xl font-bold flex items-center">
+                    שלב 2: נתוני שכר בסיס
                 </div>
-            </div>
 
-            <div id="error-msg-3"
-                class="hidden text-red-600 font-bold text-center mb-6 bg-red-50 p-3 rounded-lg border border-red-200">
-                נא למלא את סה"כ שעות וימי עבודה.
-            </div>
+                <div class="space-y-6">
+                    <div class="bg-slate-50 p-6 rounded-xl border border-slate-100">
+                        <label class="flex items-center gap-1 text-slate-700 font-bold mb-2">
+                            <span>חודש משכורת</span>
+                            <span class="inline-flex items-center text-sm font-normal text-slate-500" dir="rtl">
+                                <span>(</span><span>שנה</span><span class="mx-1">/</span><span>חודש</span><span>)</span>
+                            </span>
+                            <span class="text-red-500">*</span>
+                        </label>
+                        <input type="month" id="salary-month" required
+                            class="w-full md:w-1/2 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none text-lg">
+                    </div>
 
-            <div class="flex gap-4">
-                <button
-                    class="w-1/3 py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all flex items-center justify-center gap-2"
-                    onclick="prevPage(3)">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    חזור
-                </button>
-                <button
-                    class="w-2/3 py-4 bg-teal-600 hover:bg-teal-700 text-white font-bold text-lg rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
-                    onclick="validateAndNext(3)">
-                    המשך לשלב הבא
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform rotate-180" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-
-        <!-- ==================== PAGE 4: היעדרויות ותוספות ==================== -->
-        <div id="page-4" class="page-step hidden no-print">
-            <div
-                class="bg-amber-50 p-3 rounded-lg mb-6 font-semibold text-amber-800 text-lg border-r-4 border-amber-500">
-                שלב 4: היעדרויות, תוספות וניכויים
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div>
-                    <label for="vacation-days" class="block mb-1 font-medium text-slate-700">ימי חופשה:</label>
-                    <input type="number" id="vacation-days" value="0" min="0"
-                        class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none transition-all">
-                </div>
-                <div>
-                    <label for="sick-days" class="block mb-1 font-medium text-slate-700">ימי מחלה:</label>
-                    <input type="number" id="sick-days" value="0" min="0"
-                        class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none transition-all">
-                </div>
-                <div>
-                    <label for="unpaid-days" class="block mb-1 font-medium text-slate-700">ללא תשלום (חל"ת):</label>
-                    <input type="number" id="unpaid-days" value="0" min="0"
-                        class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none transition-all">
-                </div>
-            </div>
-
-            <div class="mb-6">
-                <label for="travel-expenses" class="block mb-1 font-medium text-slate-700">סכום נסיעות בחודש (₪): <span
-                        class="text-red-500">*</span></label>
-                <input type="number" id="travel-expenses" placeholder="הזן 0 במידה ואין" min="0"
-                    class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none transition-all">
-            </div>
-
-            <div class="mb-8 p-4 bg-purple-50 rounded-lg border border-purple-100">
-                <label for="deduction-other" class="block mb-1 font-medium text-purple-800">ניכויים שונים - רשות
-                    (₪):</label>
-                <input type="number" id="deduction-other" value="0" min="0"
-                    class="w-full p-3 border border-purple-200 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none transition-all">
-            </div>
-
-            <div id="error-msg-4"
-                class="hidden text-red-600 font-bold text-center mb-6 bg-red-50 p-3 rounded-lg border border-red-200">
-                נא למלא את סכום הנסיעות (הזן 0 אם אין).
-            </div>
-
-            <div class="flex gap-4">
-                <button
-                    class="w-1/3 py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition-all flex items-center justify-center gap-2"
-                    onclick="prevPage(4)">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
-                    חזור
-                </button>
-                <button
-                    class="w-2/3 py-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xl rounded-xl shadow-md transition-all flex items-center justify-center gap-2"
-                    onclick="validateAndCalculate()">
-                    חשב שכר נטו
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </button>
-            </div>
-
-            <div class="mt-6 text-center">
-                <button class="text-sm text-slate-500 hover:text-red-500 transition-colors underline"
-                    onclick="clearAllData()">אתחל ורוקן נתונים למחשבון חדש</button>
-            </div>
-        </div>
-
-        <!-- ==================== PAGE 5: תלוש תוצאה (מופיע כדף עצמאי) ==================== -->
-        <div id="page-5" class="page-step hidden relative transition-all duration-300">
-
-            <button
-                class="no-print mb-4 text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-2 transition-colors bg-white px-4 py-2 rounded-lg shadow-sm border border-emerald-200"
-                onclick="prevPage(5)">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd"
-                        d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                        clip-rule="evenodd" />
-                </svg>
-                חזור אחורה לעריכת הנתונים
-            </button>
-
-            <!-- תיבת גלילה פנימית לתלוש השכר -->
-            <div
-                class="max-h-[60vh] overflow-y-auto custom-scrollbar bg-emerald-50/30 p-4 md:p-6 rounded-xl border border-emerald-100 shadow-inner print:max-h-none print:overflow-visible print:border-none print:shadow-none print:bg-transparent print:p-0">
-
-                <h3 class="text-2xl font-bold text-center text-emerald-800 mb-6 border-b border-emerald-200 pb-4">תלוש
-                    שכר
-                    (סיכום)</h3>
-
-                <div class="bg-white p-4 rounded-lg border border-emerald-100 shadow-sm mb-6 print-only-border">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-slate-800">
-                        <div><span class="font-bold text-slate-500">שם העובד/ת:</span> <span id="res-emp-name"
-                                class="font-semibold">-</span></div>
-                        <div><span class="font-bold text-slate-500">מקום עבודה:</span> <span id="res-emp-workplace"
-                                class="font-semibold">-</span></div>
-                        <div><span class="font-bold text-slate-500">תפקיד:</span> <span id="res-emp-role"
-                                class="font-semibold">-</span></div>
-                        <div class="print-only hidden"><span class="font-bold text-slate-500">חודש משכורת:</span>
-                            <span>___
-                                / 20__</span>
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-6 rounded-xl border border-slate-100">
+                        <div>
+                            <label class="block text-slate-700 font-bold mb-2">שכר ברוטו (₪) <span
+                                    class="text-red-500">*</span></label>
+                            <input type="number" id="gross-salary" required min="0" placeholder="לדוגמה: 10000"
+                                class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 transition-all outline-none text-lg">
+                        </div>
+                        <div>
+                            <label class="block text-slate-700 font-bold mb-2">שכר שעתי (₪) <span
+                                    class="text-red-500">*</span></label>
+                            <input type="number" id="hourly-wage" required min="0" placeholder="לדוגמה: 50"
+                                class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 transition-all outline-none text-lg">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block text-slate-700 font-bold mb-2">נקודות זיכוי מס</label>
+                            <input type="number" id="tax-points" step="0.25" value="2.25"
+                                class="w-full md:w-1/2 p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 transition-all outline-none text-lg">
+                            <p class="text-sm text-slate-500 mt-2">ברירת מחדל לגבר: 2.25, לאישה: 2.75</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="space-y-2 text-slate-700 px-2">
-                    <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
-                        <span class="font-medium">שכר ברוטו בסיס:</span>
-                        <span id="res-base-gross" class="font-semibold text-slate-900">0 ₪</span>
+                <div class="mt-10 flex justify-between items-center">
+                    <button onclick="attemptGoToStep(1)"
+                        class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-xl transition-all flex items-center gap-2">
+                        חזור <span>&rarr;</span>
+                    </button>
+                    <button onclick="attemptGoToStep(3)"
+                        class="next-btn bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2 text-lg">
+                        המשך לשלב הבא <span>&larr;</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ==================== STEP 3 ==================== -->
+            <div id="step-3" class="step-content step-hidden">
+                <div
+                    class="bg-teal-50 border-r-4 border-teal-600 text-teal-800 px-5 py-4 rounded-l-lg mb-8 text-xl font-bold flex items-center">
+                    שלב 3: שעות וימי עבודה
+                </div>
+
+                <div class="flex mb-6 bg-slate-100 p-1 rounded-lg">
+                    <button onclick="toggleTab('regular')" id="tab-btn-regular"
+                        class="flex-1 py-3 rounded-md bg-white shadow-sm font-bold text-teal-700 border-t-2 border-teal-500 transition-all">הזנת
+                        שעות (רגיל)</button>
+                    <button onclick="toggleTab('advanced')" id="tab-btn-advanced"
+                        class="flex-1 py-3 rounded-md font-bold text-slate-500 hover:bg-slate-200 transition-all border-t-2 border-transparent">הזנה
+                        יומית (טבלה)</button>
+                </div>
+
+                <!-- Regular Hours -->
+                <div id="tab-regular" class="block space-y-6 bg-slate-50 p-6 rounded-xl border border-slate-100">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-slate-700 font-bold mb-2">סה"כ שעות עבודה <span
+                                    class="text-red-500">*</span></label>
+                            <input type="number" id="total-hours" min="0" placeholder="לדוגמה: 160"
+                                class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none step-3-req text-lg">
+                        </div>
+                        <div>
+                            <label class="block text-slate-700 font-bold mb-2">סה"כ ימי עבודה <span
+                                    class="text-red-500">*</span></label>
+                            <input type="number" id="total-days" min="0" placeholder="לדוגמה: 20"
+                                class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-teal-500 outline-none step-3-req text-lg">
+                        </div>
+                    </div>
+                    <p class="text-sm text-teal-700 bg-teal-50 p-4 rounded-lg border border-teal-100 font-medium">
+                        💡 המערכת תחלק אוטומטית שעות נוספות לפי החוק (מעל 8 שעות ביום: שעתיים ראשונות 125%, והשאר 150%).
+                    </p>
+                </div>
+
+                <!-- Advanced Table -->
+                <div id="tab-advanced" class="hidden">
+                    <p class="text-slate-600 mb-4 font-medium text-sm">הזן שעות כניסה ויציאה. המערכת מחשבת אוטומטית
+                        (100%, 125%, 150%).</p>
+                    <div class="overflow-x-auto border border-slate-200 rounded-xl mb-4 bg-white shadow-sm">
+                        <table class="w-full text-center" id="hours-table">
+                            <thead class="bg-slate-100 border-b border-slate-200">
+                                <tr>
+                                    <th class="p-3 text-slate-700 font-bold">כניסה</th>
+                                    <th class="p-3 text-slate-700 font-bold">יציאה</th>
+                                    <th class="p-3 text-slate-700 font-bold">סה"כ</th>
+                                    <th class="p-3 text-slate-700 font-bold">100%</th>
+                                    <th class="p-3 text-slate-700 font-bold">125%</th>
+                                    <th class="p-3 text-slate-700 font-bold">150%</th>
+                                    <th class="p-3 w-10"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                                    <td class="p-2"><input type="time"
+                                            class="time-in w-full bg-slate-100 border-none rounded p-2 text-center focus:bg-white focus:ring-1 focus:ring-teal-400 outline-none"
+                                            value="08:00" onchange="calculateTableHours()"></td>
+                                    <td class="p-2"><input type="time"
+                                            class="time-out w-full bg-slate-100 border-none rounded p-2 text-center focus:bg-white focus:ring-1 focus:ring-teal-400 outline-none"
+                                            value="17:00" onchange="calculateTableHours()"></td>
+                                    <td class="p-2 font-bold text-slate-800 row-total">0.00</td>
+                                    <td class="p-2 font-bold text-green-600 row-100">0.00</td>
+                                    <td class="p-2 font-bold text-yellow-500 row-125">0.00</td>
+                                    <td class="p-2 font-bold text-red-500 row-150">0.00</td>
+                                    <td class="p-2"><button onclick="removeRow(this)"
+                                            class="text-slate-400 hover:text-red-600 font-bold text-lg">&times;</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
-                    <div id="row-unpaid-deduction"
-                        class="hidden justify-between pb-2 border-b border-dashed border-emerald-200 text-red-600">
-                        <span>ימי היעדרות (קיזוז):</span>
-                        <span id="res-unpaid" class="font-semibold">-0 ₪</span>
-                    </div>
-
-                    <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200 pt-2">
-                        <span>שכר שעתי:</span>
-                        <span id="res-hourly-rate" class="font-semibold">0 ₪</span>
-                    </div>
-                    <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
-                        <span>סה"כ ימי עבודה:</span>
-                        <span id="res-total-days" class="font-semibold">0</span>
-                    </div>
-                    <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
-                        <span>סה"כ שעות רגילות (100%):</span>
-                        <span id="res-total-hours" class="font-semibold">0</span>
-                    </div>
-
-                    <div id="row-ot-125" class="hidden justify-between pb-2 border-b border-dashed border-emerald-200">
-                        <span>שעות נוספות (125%):</span>
-                        <span id="res-ot-125" class="font-semibold text-amber-600">0</span>
-                    </div>
-                    <div id="row-ot-150" class="hidden justify-between pb-2 border-b border-dashed border-emerald-200">
-                        <span>שעות נוספות (150%):</span>
-                        <span id="res-ot-150" class="font-semibold text-red-600">0</span>
-                    </div>
-                    <div id="row-overtime"
-                        class="hidden justify-between pb-2 border-b border-dashed border-emerald-200 bg-amber-50 p-1 rounded">
-                        <span class="font-medium text-amber-800">תוספת שעות נוספות:</span>
-                        <span id="res-overtime" class="font-bold text-amber-700">0 ₪</span>
-                    </div>
-
-                    <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200 pt-2">
-                        <span>דמי חופשה:</span>
-                        <span id="res-vacation" class="font-semibold text-emerald-700">0 ₪</span>
-                    </div>
-                    <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
-                        <span>דמי מחלה:</span>
-                        <span id="res-sick" class="font-semibold text-emerald-700">0 ₪</span>
-                    </div>
-                    <div class="flex justify-between pb-2 border-b border-dashed border-emerald-200">
-                        <span>החזר נסיעות:</span>
-                        <span id="res-travel" class="font-semibold text-emerald-700">0 ₪</span>
-                    </div>
-
-                    <div class="flex justify-between p-3 mt-4 bg-white border border-emerald-300 rounded-lg shadow-sm">
-                        <span class="font-bold text-lg">סה"כ שכר ברוטו לתשלום:</span>
-                        <span id="res-gross" class="font-bold text-lg text-emerald-800">0 ₪</span>
-                    </div>
-
-                    <h4 class="font-bold text-slate-800 mt-6 mb-2 border-b border-slate-200 pb-1">ניכויי חובה</h4>
-                    <div class="flex justify-between pb-2 border-b border-dashed border-red-100 text-red-600">
-                        <span>מס הכנסה:</span>
-                        <span id="res-tax" class="font-semibold">-0 ₪</span>
-                    </div>
-                    <div class="flex justify-between pb-2 border-b border-dashed border-red-100 text-red-600">
-                        <span>ביטוח לאומי:</span>
-                        <span id="res-btl" class="font-semibold">-0 ₪</span>
-                    </div>
-                    <div class="flex justify-between pb-2 border-b border-dashed border-red-100 text-red-600">
-                        <span>מס בריאות:</span>
-                        <span id="res-health" class="font-semibold">-0 ₪</span>
-                    </div>
-
-                    <h4 class="font-bold text-slate-800 mt-4 mb-2 border-b border-slate-200 pb-1">ניכויי רשות</h4>
-                    <div class="flex justify-between pb-2 border-b border-dashed border-red-100 text-red-600">
-                        <span>שונות:</span>
-                        <span id="res-other" class="font-semibold">-0 ₪</span>
+                    <div class="flex justify-start mb-6">
+                        <button onclick="addRow()"
+                            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2.5 px-6 rounded-lg transition-colors shadow flex items-center gap-2">
+                            + הוסף יום עבודה
+                        </button>
                     </div>
 
                     <div
-                        class="flex justify-between p-4 mt-6 bg-emerald-600 text-white rounded-xl shadow-lg items-center">
-                        <span class="font-bold text-xl">שכר נטו לתשלום:</span>
-                        <span id="res-net" class="font-black text-3xl">0 ₪</span>
+                        class="bg-white border border-slate-200 rounded-xl p-4 flex flex-wrap justify-between items-center shadow-sm">
+                        <span class="font-extrabold text-slate-800 text-lg ml-4">סה"כ:</span>
+                        <div class="flex gap-3 flex-wrap">
+                            <div
+                                class="bg-green-50 text-green-700 px-4 py-1.5 rounded-lg font-bold border border-green-100">
+                                רגיל: <span id="tbl-total-100">0.00</span>
+                            </div>
+                            <div
+                                class="bg-yellow-50 text-yellow-600 px-4 py-1.5 rounded-lg font-bold border border-yellow-100">
+                                125%: <span id="tbl-total-125">0.00</span>
+                            </div>
+                            <div class="bg-red-50 text-red-600 px-4 py-1.5 rounded-lg font-bold border border-red-100">
+                                150%: <span id="tbl-total-150">0.00</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-            </div> <!-- סיום תיבת גלילה פנימית -->
+                <div class="mt-10 flex justify-between items-center">
+                    <button onclick="attemptGoToStep(2)"
+                        class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-xl transition-all flex items-center gap-2">
+                        חזור <span>&rarr;</span>
+                    </button>
+                    <button onclick="attemptGoToStep(4)"
+                        class="next-btn bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2 text-lg">
+                        המשך לשלב הבא <span>&larr;</span>
+                    </button>
+                </div>
+            </div>
 
-            <button
-                class="no-print w-full mt-6 py-4 bg-slate-700 hover:bg-slate-800 text-white font-medium text-lg rounded-xl transition-colors flex items-center justify-center gap-2 shadow-md"
-                onclick="window.print()">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                </svg>
-                הדפס תלוש שכר / שמור כ-PDF
-            </button>
+            <!-- ==================== STEP 4 ==================== -->
+            <div id="step-4" class="step-content step-hidden">
+                <div
+                    class="bg-orange-50 border-r-4 border-orange-600 text-orange-900 px-5 py-4 rounded-l-lg mb-8 text-xl font-bold flex items-center">
+                    שלב 4: היעדרויות, תוספות וניכויים
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
+                        <label class="block text-slate-700 font-bold mb-2">ימי חופשה בתשלום</label>
+                        <input type="number" id="vacation-days" value="0" min="0"
+                            class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none text-lg">
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
+                        <label class="block text-slate-700 font-bold mb-2">ימי מחלה</label>
+                        <input type="number" id="sick-days" value="0" min="0"
+                            class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none text-lg">
+                        <p class="text-xs text-slate-500 mt-2">מחושב מדורג לפי חוק (0%, 50%, 100%)</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
+                        <label class="block text-slate-700 font-bold mb-2">ימי היעדרות ללא תשלום (חל"ת)</label>
+                        <input type="number" id="unpaid-days" value="0" min="0"
+                            class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none text-lg">
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-100">
+                        <label class="block text-slate-700 font-bold mb-2">סכום נסיעות (₪) <span
+                                class="text-red-500">*</span></label>
+                        <input type="number" id="travel-expenses" required placeholder="לדוגמה: 200" min="0"
+                            class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none text-lg">
+                    </div>
+                </div>
+
+                <div class="bg-purple-50 border-2 border-purple-200 rounded-xl p-6 mt-4">
+                    <label class="block text-purple-900 font-bold mb-3 text-lg">ניכויים שונים - רשות (₪):</label>
+                    <input type="number" id="voluntary-deduction" value="0" min="0"
+                        class="w-full md:w-1/2 p-3 bg-white border border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none text-lg">
+                </div>
+
+                <div class="mt-10 flex flex-col-reverse md:flex-row justify-between items-center gap-4">
+                    <button onclick="attemptGoToStep(3)"
+                        class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-xl transition-all w-full md:w-auto flex justify-center items-center gap-2">
+                        חזור <span>&rarr;</span>
+                    </button>
+                    <div class="flex gap-3 w-full md:w-auto">
+                        <button onclick="clearData()"
+                            class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold py-3 px-6 rounded-xl transition-all flex-1 md:flex-none">נקה
+                            נתונים</button>
+                        <button onclick="processFinalCalculation()"
+                            class="next-btn bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg hover:shadow-xl text-lg flex-1 md:flex-none flex justify-center items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            חשב שכר נטו
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================== RESULT ==================== -->
+            <div id="step-result" class="step-content step-hidden print-only">
+
+                <div class="flex justify-between items-center mb-4 no-print">
+                    <h2 class="text-3xl font-extrabold text-slate-800">סיכום תלוש שכר</h2>
+                    <button onclick="goToStep(4)"
+                        class="text-blue-600 hover:text-blue-800 font-bold underline flex items-center gap-1">
+                        <span>&rarr;</span> ערוך נתונים
+                    </button>
+                </div>
+
+                <!-- Highly Compacted Payslip Box -->
+                <div
+                    class="payslip-scroll max-h-[60vh] overflow-y-auto border-2 border-emerald-500 rounded-2xl bg-emerald-50/30 p-3 md:p-5">
+
+                    <!-- Payslip Header Card -->
+                    <div class="bg-white p-4 rounded-xl border border-emerald-500/20 mb-3 shadow-sm">
+                        <h3
+                            class="text-xl font-black text-emerald-800 mb-3 tracking-tight border-b border-emerald-100 pb-2">
+                            תלוש שכר (סיכום)</h3>
+                        <div class="grid grid-cols-2 gap-y-2 text-right text-base">
+                            <p class="text-slate-500 font-medium">שם העובד/ת:</p>
+                            <p class="font-bold text-slate-800" id="res-name">-</p>
+                            <p class="text-slate-500 font-medium">מקום עבודה:</p>
+                            <p class="font-bold text-slate-800" id="res-workplace">-</p>
+                            <p class="text-slate-500 font-medium">תפקיד:</p>
+                            <p class="font-bold text-slate-800" id="res-role">-</p>
+                            <p class="text-blue-600 font-bold">חודש משכורת:</p>
+                            <p class="font-black text-blue-700 text-lg" id="res-month">-</p>
+                        </div>
+                    </div>
+
+                    <!-- Payslip Body Compact -->
+                    <div class="space-y-3">
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm text-base">
+                            <h4
+                                class="font-black text-indigo-800 mb-3 bg-indigo-50 inline-block px-3 py-1 rounded text-sm">
+                                נתוני שכר בסיס</h4>
+                            <div class="flex justify-between border-b border-slate-100 pb-2 mb-2"><span
+                                    class="font-medium text-slate-500">שכר ברוטו</span><span id="res-gross"
+                                    class="font-black text-slate-800">0 ₪</span></div>
+                            <div class="flex justify-between border-b border-slate-100 pb-2 mb-2"><span
+                                    class="font-medium text-slate-500">שכר שעתי</span><span id="res-hourly"
+                                    class="font-bold text-slate-700">0 ₪</span></div>
+                            <div class="flex justify-between border-b border-slate-100 pb-2 mb-2"><span
+                                    class="font-medium text-slate-500">סה"כ שעות עבודה</span><span id="res-hours"
+                                    class="font-bold text-slate-700">0</span></div>
+                            <div class="flex justify-between"><span class="font-medium text-slate-500">סה"כ ימי
+                                    עבודה</span><span id="res-days" class="font-bold text-slate-700">0</span></div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl border border-emerald-100 shadow-sm text-base">
+                            <h4
+                                class="font-black text-emerald-800 mb-3 bg-emerald-50 inline-block px-3 py-1 rounded text-sm">
+                                הכנסות ותוספות</h4>
+                            <div id="res-row-regular"
+                                class="flex justify-between border-b border-dashed border-slate-200 pb-2 mb-2 hidden">
+                                <span class="text-slate-600">שכר עבודה (בסיס)</span><span id="res-base-pay"
+                                    class="text-emerald-700 font-bold">0 ₪</span>
+                            </div>
+                            <div id="res-row-ot125"
+                                class="flex justify-between border-b border-dashed border-slate-200 pb-2 mb-2 hidden">
+                                <span class="text-slate-600">שעות נוספות (125%)</span><span id="res-ot125"
+                                    class="text-emerald-700 font-bold">0 ₪</span>
+                            </div>
+                            <div id="res-row-ot150"
+                                class="flex justify-between border-b border-dashed border-slate-200 pb-2 mb-2 hidden">
+                                <span class="text-slate-600">שעות נוספות (150%)</span><span id="res-ot150"
+                                    class="text-emerald-700 font-bold">0 ₪</span>
+                            </div>
+                            <div class="flex justify-between border-b border-dashed border-slate-200 pb-2 mb-2"><span
+                                    class="text-slate-600">נסיעות</span><span id="res-travel"
+                                    class="text-emerald-700 font-bold">0 ₪</span></div>
+                            <div class="flex justify-between border-b border-dashed border-slate-200 pb-2 mb-2"><span
+                                    class="text-slate-600">דמי חופשה</span><span id="res-vacation"
+                                    class="text-emerald-700 font-bold">0 ₪</span></div>
+                            <div class="flex justify-between"><span class="text-slate-600">דמי מחלה</span><span
+                                    id="res-sick" class="text-emerald-700 font-bold">0 ₪</span></div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl border border-red-100 shadow-sm text-base">
+                            <h4 class="font-black text-red-800 mb-3 bg-red-50 inline-block px-3 py-1 rounded text-sm">
+                                ניכויי חובה והיעדרויות</h4>
+                            <div id="res-row-unpaid"
+                                class="flex justify-between border-b border-dashed border-slate-200 pb-2 mb-2 hidden">
+                                <span class="text-slate-600">היעדרות ללא תשלום (חל"ת)</span><span id="res-unpaid"
+                                    class="text-red-600 font-bold">0 ₪</span>
+                            </div>
+                            <div class="flex justify-between border-b border-dashed border-slate-200 pb-2 mb-2"><span
+                                    class="text-slate-600">מס הכנסה</span><span id="res-tax"
+                                    class="text-red-600 font-bold">0 ₪</span></div>
+                            <div class="flex justify-between border-b border-dashed border-slate-200 pb-2 mb-2"><span
+                                    class="text-slate-600">ביטוח לאומי</span><span id="res-btl"
+                                    class="text-red-600 font-bold">0 ₪</span></div>
+                            <div class="flex justify-between"><span class="text-slate-600">ביטוח בריאות</span><span
+                                    id="res-health" class="text-red-600 font-bold">0 ₪</span></div>
+                        </div>
+
+                        <div id="res-box-voluntary"
+                            class="bg-white p-4 rounded-xl border border-purple-100 shadow-sm text-base hidden">
+                            <h4
+                                class="font-black text-purple-800 mb-3 bg-purple-50 inline-block px-3 py-1 rounded text-sm">
+                                ניכויי רשות</h4>
+                            <div class="flex justify-between"><span class="text-slate-600">ניכויים שונים</span><span
+                                    id="res-voluntary" class="text-purple-700 font-bold">0 ₪</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Much Smaller Net Salary Box -->
+                    <div
+                        class="mt-4 bg-slate-800 text-white py-4 px-6 rounded-2xl shadow-lg flex flex-col items-center justify-center">
+                        <p class="text-slate-300 text-sm mb-1 font-medium">סה"כ לתשלום (שכר נטו)</p>
+                        <p class="text-4xl font-black text-emerald-400 tracking-tight" id="res-net">0 ₪</p>
+                    </div>
+                </div>
+
+                <!-- Print Button -->
+                <button onclick="printPayslip()"
+                    class="no-print w-full mt-4 bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 px-4 rounded-xl transition-all shadow flex justify-center items-center gap-3 text-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-emerald-400" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    </svg>
+                    הדפס תלוש שכר
+                </button>
+            </div>
         </div>
+
+        <!-- Exact Match Footer from Image -->
+        <div
+            class="bg-gray-200 text-slate-700 text-center py-4 font-bold text-lg rounded-b-2xl no-print -mx-6 -mb-6 md:-mx-10 md:-mb-10 mt-8 tracking-wide">
+            כל הזכויות שמורות © 2026 - עיצוב ופיתוח: אליהו סגס
+        </div>
+
     </div>
 
     <script>
-        let activeTabMode = 'manual';
-        let currentPage = 1;
+        let currentStep = 1;
+        let activeTab = 'regular';
+        const totalSteps = 4;
 
-        window.advRegHours = 0;
-        window.advOt125 = 0;
-        window.advOt150 = 0;
-        window.advWorkDays = 0;
+        setTimeout(calculateTableHours, 100);
 
-        // --- ניהול דפים וסרגל התקדמות ---
-
-        function showPage(pageNum) {
-            // הסתרת כל הדפים
-            for (let i = 1; i <= 5; i++) {
-                const page = document.getElementById(`page-${i}`);
-                if (page) {
-                    page.classList.add('hidden');
-                    page.classList.remove('block');
+        function attemptGoToStep(targetStep) {
+            if (targetStep > totalSteps || targetStep < 1) return;
+            if (targetStep <= currentStep) {
+                goToStep(targetStep);
+                return;
+            }
+            let canProceed = true;
+            for (let i = currentStep; i < targetStep; i++) {
+                if (!validateSpecificStep(i)) {
+                    canProceed = false;
+                    goToStep(i);
+                    showError("נא למלא את כל שדות החובה בעברית או להשלים את הנתונים כדי להמשיך.");
+                    break;
                 }
             }
-
-            // הצגת הדף המבוקש
-            const activePage = document.getElementById(`page-${pageNum}`);
-            if (activePage) {
-                activePage.classList.remove('hidden');
-                activePage.classList.add('block');
+            if (canProceed) {
+                hideError();
+                goToStep(targetStep);
             }
-
-            const wizardProgress = document.getElementById('wizard-progress');
-            const mainHeader = document.getElementById('main-header');
-
-            // אם אנחנו מציגים את דף התוצאה (5), נעלים את סרגל ההתקדמות והכותרת הכללית 
-            // כדי ליצור תחושה של "דף חדש" ללא החלפת טאב אמיתית.
-            if (pageNum === 5) {
-                if (wizardProgress) {
-                    wizardProgress.classList.add('hidden');
-                    wizardProgress.classList.remove('flex');
-                }
-                if (mainHeader) {
-                    mainHeader.classList.add('hidden');
-                }
-            } else {
-                if (wizardProgress) {
-                    wizardProgress.classList.remove('hidden');
-                    wizardProgress.classList.add('flex');
-                }
-                if (mainHeader) {
-                    mainHeader.classList.remove('hidden');
-                }
-
-                // עדכון סרגל ההתקדמות הוויזואלי ל-4 שלבים (המקסימום הוא 3 קטעי קו)
-                const lineWidth = ((pageNum - 1) / 3) * 100;
-                document.getElementById('progress-line').style.width = `calc(${lineWidth}%)`;
-                if (document.dir === 'rtl') {
-                    document.getElementById('progress-line').style.right = '0';
-                    document.getElementById('progress-line').style.left = 'auto';
-                }
-
-                for (let i = 1; i <= 4; i++) {
-                    const indContainer = document.getElementById(`indicator-${i}`);
-                    if (!indContainer) continue;
-
-                    const ind = indContainer.querySelector('div');
-                    const text = indContainer.querySelector('span');
-
-                    // איפוס סגנונות
-                    ind.className = "w-10 h-10 rounded-full flex items-center justify-center font-bold shadow-md border-4 border-white transition-colors duration-300";
-                    text.className = "text-xs mt-2 font-medium absolute -bottom-6 w-20 text-center transition-colors";
-
-                    if (i < pageNum) {
-                        // שלבים שהושלמו
-                        ind.classList.add('bg-blue-600', 'text-white');
-                        text.classList.add('text-slate-700');
-                    } else if (i === pageNum) {
-                        // שלב נוכחי
-                        ind.classList.add('bg-blue-600', 'text-white', 'ring-4', 'ring-blue-100');
-                        text.classList.add('text-blue-700', 'font-bold');
-                    } else {
-                        // שלבים עתידיים
-                        ind.classList.add('bg-slate-200', 'text-slate-500', 'shadow-sm');
-                        text.classList.add('text-slate-400');
-                    }
-                }
-            }
-
-            currentPage = pageNum;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function prevPage(pageNum) {
-            showPage(pageNum - 1);
-        }
-
-        // --- אימות שדות לפני מעבר דף ---
-
-        function validateAndNext(pageNum) {
+        function validateSpecificStep(stepNum) {
             let isValid = true;
-            const errorMsg = document.getElementById(`error-msg-${pageNum}`);
-            let hebrewError = false;
+            const stepDiv = document.getElementById(`step-${stepNum}`);
 
-            if (pageNum === 1) {
-                const fields = ['first-name', 'last-name', 'workplace', 'job-role'];
-                const hebrewRegex = /^[א-ת\s]+$/;
-
-                fields.forEach(id => {
-                    const el = document.getElementById(id);
-                    const value = el.value.trim();
-
-                    if (!value || !hebrewRegex.test(value)) {
-                        isValid = false;
-                        el.classList.add('border-red-500', 'ring-red-500', 'bg-red-50');
-                        el.classList.remove('border-slate-300', 'focus:ring-blue-500');
-                        if (value && !hebrewRegex.test(value)) hebrewError = true;
-                    } else {
-                        el.classList.remove('border-red-500', 'ring-red-500', 'bg-red-50');
-                        el.classList.add('border-slate-300', 'focus:ring-blue-500');
-                    }
-                });
-                if (!isValid) {
-                    errorMsg.innerText = hebrewError ? "נא למלא את כל שדות החובה בעברית בלבד." : "נא למלא את כל שדות החובה.";
-                }
-
-            } else if (pageNum === 2) {
-                const fields = ['global-salary', 'hourly-wage'];
-                fields.forEach(id => {
-                    const el = document.getElementById(id);
-                    if (!el.value.trim()) {
-                        isValid = false;
-                        el.classList.add('border-red-500', 'ring-red-500', 'bg-red-50');
-                        el.classList.remove('border-slate-300', 'focus:ring-indigo-500');
-                    } else {
-                        el.classList.remove('border-red-500', 'ring-red-500', 'bg-red-50');
-                        el.classList.add('border-slate-300', 'focus:ring-indigo-500');
-                    }
-                });
-
-            } else if (pageNum === 3) {
-                if (activeTabMode === 'manual') {
-                    const fields = ['total-hours', 'total-days'];
-                    fields.forEach(id => {
-                        const el = document.getElementById(id);
-                        if (!el.value.trim()) {
-                            isValid = false;
-                            el.classList.add('border-red-500', 'ring-red-500', 'bg-red-50');
-                            el.classList.remove('border-slate-300', 'focus:ring-teal-500');
-                        } else {
-                            el.classList.remove('border-red-500', 'ring-red-500', 'bg-red-50');
-                            el.classList.add('border-slate-300', 'focus:ring-teal-500');
-                        }
-                    });
-                }
-            }
-
-            if (!isValid) {
-                errorMsg.classList.remove('hidden');
-                return;
-            }
-
-            errorMsg.classList.add('hidden');
-            showPage(pageNum + 1);
-        }
-
-        function validateAndCalculate() {
-            const el = document.getElementById('travel-expenses');
-            const errorMsg = document.getElementById('error-msg-4');
-
-            if (!el.value.trim()) {
-                el.classList.add('border-red-500', 'ring-red-500', 'bg-red-50');
-                el.classList.remove('border-slate-300', 'focus:ring-amber-500');
-                errorMsg.classList.remove('hidden');
-                return;
-            } else {
-                el.classList.remove('border-red-500', 'ring-red-500', 'bg-red-50');
-                el.classList.add('border-slate-300', 'focus:ring-amber-500');
-                errorMsg.classList.add('hidden');
-            }
-
-            calculateSalary();
-        }
-
-        // --- ניהול טאבים (רגיל / מתקדם) ---
-
-        function switchTab(tabName) {
-            activeTabMode = tabName;
-
-            document.getElementById('tab-manual').classList.add('hidden');
-            document.getElementById('tab-manual').classList.remove('block');
-            document.getElementById('tab-advanced').classList.add('hidden');
-            document.getElementById('tab-advanced').classList.remove('block');
-
-            document.getElementById('btn-manual').classList.remove('active', 'bg-teal-500', 'text-white');
-            document.getElementById('btn-advanced').classList.remove('active', 'bg-teal-500', 'text-white');
-
-            document.getElementById('tab-' + tabName).classList.remove('hidden');
-            document.getElementById('tab-' + tabName).classList.add('block');
-
-            const btn = document.getElementById('btn-' + tabName);
-            btn.classList.add('active', 'bg-teal-500', 'text-white');
-        }
-
-        function addTimeRow() {
-            const tbody = document.getElementById('time-body');
-            const tr = document.createElement('tr');
-            tr.className = "border-b border-slate-200 hover:bg-slate-100 transition-colors";
-            tr.innerHTML = `
-            <td class="p-1"><input type="time" class="time-start w-full p-2 border border-slate-300 rounded focus:ring-1 focus:ring-teal-500 outline-none text-center" onchange="updateAdvancedHours()"></td>
-            <td class="p-1"><input type="time" class="time-end w-full p-2 border border-slate-300 rounded focus:ring-1 focus:ring-teal-500 outline-none text-center" onchange="updateAdvancedHours()"></td>
-            <td class="row-total font-bold p-2 text-slate-800">0.00</td>
-            <td class="row-reg text-emerald-600 p-2">0.00</td>
-            <td class="row-125 text-amber-500 p-2">0.00</td>
-            <td class="row-150 text-red-500 p-2">0.00</td>
-            <td class="p-1"><button class="text-red-400 hover:text-red-600 font-bold" onclick="this.closest('tr').remove(); updateAdvancedHours();" title="הסר שורה">✖</button></td>
-        `;
-            tbody.appendChild(tr);
-        }
-
-        function updateAdvancedHours() {
-            let totalReg = 0, total125 = 0, total150 = 0, daysCount = 0;
-            const rows = document.querySelectorAll('#time-body tr');
-
-            rows.forEach(row => {
-                const startInput = row.querySelector('.time-start');
-                const endInput = row.querySelector('.time-end');
-                if (!startInput || !endInput) return;
-
-                const start = startInput.value;
-                const end = endInput.value;
-
-                let rowTotal = 0, reg = 0, ot125 = 0, ot150 = 0;
-
-                if (start && end) {
-                    daysCount++;
-                    const startTime = new Date(`1970-01-01T${start}:00`);
-                    const endTime = new Date(`1970-01-01T${end}:00`);
-                    let diff = (endTime - startTime) / (1000 * 60 * 60);
-                    if (diff < 0) diff += 24;
-                    rowTotal = diff;
-
-                    reg = Math.min(rowTotal, 8);
-                    ot125 = Math.max(0, Math.min(rowTotal - 8, 2));
-                    ot150 = Math.max(0, rowTotal - 10);
-
-                    totalReg += reg;
-                    total125 += ot125;
-                    total150 += ot150;
-                }
-                row.querySelector('.row-total').innerText = rowTotal.toFixed(2);
-                row.querySelector('.row-reg').innerText = reg.toFixed(2);
-                row.querySelector('.row-125').innerText = ot125.toFixed(2);
-                row.querySelector('.row-150').innerText = ot150.toFixed(2);
-            });
-
-            document.getElementById('calc-reg').innerText = totalReg.toFixed(2);
-            document.getElementById('calc-125').innerText = total125.toFixed(2);
-            document.getElementById('calc-150').innerText = total150.toFixed(2);
-
-            window.advRegHours = totalReg;
-            window.advOt125 = total125;
-            window.advOt150 = total150;
-            window.advWorkDays = daysCount;
-        }
-
-        // --- חישוב ותוצאות ---
-
-        function calculateSalary() {
-            // --- שאיבת פרטים אישיים והצגתם בתלוש ---
-            const firstName = document.getElementById('first-name').value.trim();
-            const lastName = document.getElementById('last-name').value.trim();
-            const fullName = `${firstName} ${lastName}`.trim();
-            const workplace = document.getElementById('workplace').value.trim();
-            const role = document.getElementById('job-role').value.trim();
-
-            document.getElementById('res-emp-name').innerText = fullName;
-            document.getElementById('res-emp-workplace').innerText = workplace;
-            document.getElementById('res-emp-role').innerText = role;
-
-            // --- חישובי המחשבון ---
-            const globalSalary = parseFloat(document.getElementById('global-salary').value) || 0;
-            const hourlyWage = parseFloat(document.getElementById('hourly-wage').value) || 0;
-
-            let regHours = 0, ot125Hours = 0, ot150Hours = 0, workDays = 0;
-
-            if (activeTabMode === 'manual') {
-                const manualTotalHours = parseFloat(document.getElementById('total-hours').value) || 0;
-                workDays = parseFloat(document.getElementById('total-days').value) || 0;
-
-                if (workDays > 0 && manualTotalHours > 0) {
-                    const maxRegHours = workDays * 8;
-                    const max125Hours = workDays * 2;
-
-                    regHours = Math.min(manualTotalHours, maxRegHours);
-                    const remainderHours = Math.max(0, manualTotalHours - regHours);
-
-                    ot125Hours = Math.min(remainderHours, max125Hours);
-                    ot150Hours = Math.max(0, remainderHours - ot125Hours);
+            let inputs;
+            if (stepNum === 3) {
+                if (activeTab === 'regular') {
+                    inputs = stepDiv.querySelectorAll('.step-3-req');
                 } else {
-                    regHours = manualTotalHours;
-                    ot125Hours = 0;
-                    ot150Hours = 0;
+                    inputs = [];
                 }
             } else {
-                regHours = window.advRegHours || 0;
-                ot125Hours = window.advOt125 || 0;
-                ot150Hours = window.advOt150 || 0;
-                workDays = window.advWorkDays || 0;
+                inputs = stepDiv.querySelectorAll('input[required]');
             }
 
-            const vacationDays = parseFloat(document.getElementById('vacation-days').value) || 0;
-            const sickDays = parseFloat(document.getElementById('sick-days').value) || 0;
-            const unpaidDays = parseFloat(document.getElementById('unpaid-days').value) || 0;
-            const travelExpenses = parseFloat(document.getElementById('travel-expenses').value) || 0;
-            const creditPoints = parseFloat(document.getElementById('credit-points').value) || 0;
-            const dedOther = parseFloat(document.getElementById('deduction-other').value) || 0;
-
-            const dailyWageForHourly = (hourlyWage * 8) + (hourlyWage * 2 * 1.25);
-
-            let unpaidLeaveDeduction = 0;
-            if (globalSalary > 0 && unpaidDays > 0) {
-                unpaidLeaveDeduction = unpaidDays * (globalSalary / 22);
-            }
-
-            let baseSalaryToPay = 0;
-            if (globalSalary > 0) {
-                baseSalaryToPay = globalSalary - unpaidLeaveDeduction;
-                if (baseSalaryToPay < 0) baseSalaryToPay = 0;
-            } else {
-                baseSalaryToPay = regHours * hourlyWage;
-            }
-
-            const otPay = (ot125Hours * hourlyWage * 1.25) + (ot150Hours * hourlyWage * 1.5);
-
-            let vacationPay = 0;
-            if (globalSalary > 0) {
-                vacationPay = vacationDays * (globalSalary / 22);
-            } else {
-                vacationPay = vacationDays * dailyWageForHourly;
-            }
-
-            let dailyWageForSickPay = 0;
-            if (globalSalary > 0) {
-                dailyWageForSickPay = globalSalary / 30;
-            } else {
-                dailyWageForSickPay = dailyWageForHourly;
-            }
-
-            let sickPayMultiplier = 0;
-            if (sickDays === 1) sickPayMultiplier = 0;
-            else if (sickDays === 2) sickPayMultiplier = 0.5;
-            else if (sickDays === 3) sickPayMultiplier = 1.0;
-            else if (sickDays >= 4) sickPayMultiplier = 1.0 + (sickDays - 3);
-            const sickPay = sickPayMultiplier * dailyWageForSickPay;
-
-            const grossSalary = baseSalaryToPay + otPay + vacationPay + sickPay + travelExpenses;
-
-            const reducedBracketLimit = 7522;
-            let btlTax = 0, healthTax = 0;
-
-            if (grossSalary <= reducedBracketLimit) {
-                btlTax = grossSalary * 0.004;
-                healthTax = grossSalary * 0.031;
-            } else {
-                btlTax = (reducedBracketLimit * 0.004) + ((grossSalary - reducedBracketLimit) * 0.0295);
-                healthTax = (reducedBracketLimit * 0.031) + ((grossSalary - reducedBracketLimit) * 0.05);
-            }
-
-            let incomeTax = 0;
-            if (grossSalary > 0) incomeTax += Math.min(grossSalary, 7010) * 0.10;
-            if (grossSalary > 7010) incomeTax += Math.min(grossSalary - 7010, 3050) * 0.14;
-            if (grossSalary > 10060) incomeTax += Math.min(grossSalary - 10060, 6090) * 0.20;
-            if (grossSalary > 16150) incomeTax += (grossSalary - 16150) * 0.31;
-
-            const creditPointValue = 242;
-            const taxDiscount = creditPoints * creditPointValue;
-            incomeTax = Math.max(0, incomeTax - taxDiscount);
-
-            const netSalary = grossSalary - incomeTax - btlTax - healthTax - dedOther;
-
-            document.getElementById('res-base-gross').innerText = (globalSalary > 0 ? globalSalary : baseSalaryToPay).toFixed(2) + ' ₪';
-
-            const unpaidRow = document.getElementById('row-unpaid-deduction');
-            if (unpaidLeaveDeduction > 0) {
-                unpaidRow.style.display = 'flex';
-                document.getElementById('res-unpaid').innerText = '-' + unpaidLeaveDeduction.toFixed(2) + ' ₪';
-            } else {
-                unpaidRow.style.display = 'none';
-            }
-
-            document.getElementById('res-hourly-rate').innerText = hourlyWage.toFixed(2) + ' ₪';
-            document.getElementById('res-total-days').innerText = workDays;
-            document.getElementById('res-total-hours').innerText = regHours.toFixed(2);
-
-            const ot125Row = document.getElementById('row-ot-125');
-            if (ot125Hours > 0) {
-                ot125Row.style.display = 'flex';
-                document.getElementById('res-ot-125').innerText = ot125Hours.toFixed(2);
-            } else {
-                ot125Row.style.display = 'none';
-            }
-
-            const ot150Row = document.getElementById('row-ot-150');
-            if (ot150Hours > 0) {
-                ot150Row.style.display = 'flex';
-                document.getElementById('res-ot-150').innerText = ot150Hours.toFixed(2);
-            } else {
-                ot150Row.style.display = 'none';
-            }
-
-            const otRow = document.getElementById('row-overtime');
-            if (otPay > 0) {
-                otRow.style.display = 'flex';
-                document.getElementById('res-overtime').innerText = otPay.toFixed(2) + ' ₪';
-            } else {
-                otRow.style.display = 'none';
-            }
-
-            document.getElementById('res-vacation').innerText = vacationPay.toFixed(2) + ' ₪';
-            document.getElementById('res-sick').innerText = sickPay.toFixed(2) + ' ₪';
-            document.getElementById('res-travel').innerText = travelExpenses.toFixed(2) + ' ₪';
-            document.getElementById('res-gross').innerText = grossSalary.toFixed(2) + ' ₪';
-
-            document.getElementById('res-tax').innerText = '-' + incomeTax.toFixed(2) + ' ₪';
-            document.getElementById('res-btl').innerText = '-' + btlTax.toFixed(2) + ' ₪';
-            document.getElementById('res-health').innerText = '-' + healthTax.toFixed(2) + ' ₪';
-            document.getElementById('res-other').innerText = '-' + dedOther.toFixed(2) + ' ₪';
-            document.getElementById('res-net').innerText = netSalary.toFixed(2) + ' ₪';
-
-            // מעבר לדף התוצאה (עמוד 5) המשמש כעת כ"דף חדש" ללא האשף
-            showPage(5);
-        }
-
-        function clearAllData() {
-            // איפוס כל הנתונים וחזרה לדף הראשון
-            const inputs = document.querySelectorAll('input[type="text"], input[type="number"]');
             inputs.forEach(input => {
-                if (input.id !== 'credit-points') input.value = '';
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.classList.add('border-red-500', 'bg-red-50');
+                } else {
+                    input.classList.remove('border-red-500', 'bg-red-50');
+                }
             });
 
-            document.getElementById('credit-points').value = "2.25";
-            document.getElementById('vacation-days').value = "0";
-            document.getElementById('sick-days').value = "0";
-            document.getElementById('unpaid-days').value = "0";
-            document.getElementById('deduction-other').value = "0";
-
-            document.getElementById('time-body').innerHTML = '';
-            addTimeRow();
-
-            window.advRegHours = 0; window.advOt125 = 0; window.advOt150 = 0; window.advWorkDays = 0;
-            document.getElementById('calc-reg').innerText = "0.00";
-            document.getElementById('calc-125').innerText = "0.00";
-            document.getElementById('calc-150').innerText = "0.00";
-
-            // הסרת שגיאות
-            const allInputs = document.querySelectorAll('input');
-            allInputs.forEach(el => {
-                el.classList.remove('border-red-500', 'ring-red-500', 'bg-red-50');
-            });
-            for (let i = 1; i <= 4; i++) {
-                document.getElementById(`error-msg-${i}`).classList.add('hidden');
+            if (stepNum === 1) {
+                const hebRegex = /^[\u0590-\u05FF\s]+$/;
+                inputs.forEach(input => {
+                    if (input.value && !hebRegex.test(input.value)) {
+                        isValid = false;
+                        input.classList.add('border-red-500', 'bg-red-50');
+                    }
+                });
             }
-
-            switchTab('manual');
-            showPage(1);
+            return isValid;
         }
 
-        window.onload = function () {
-            addTimeRow();
-            // הצגת הדף הראשון בעת טעינה
-            showPage(1);
-        };
+        function goToStep(step) {
+            document.querySelectorAll('.step-content').forEach(el => el.classList.add('step-hidden'));
+            if (step <= totalSteps) {
+                document.getElementById(`step-${step}`).classList.remove('step-hidden');
+                document.getElementById('wizard-tracker').classList.remove('hidden');
+                updateTracker(step);
+            } else {
+                document.getElementById('step-result').classList.remove('step-hidden');
+                document.getElementById('wizard-tracker').classList.add('hidden');
+            }
+            currentStep = step;
+        }
 
-        // --- הפעלת מקש Enter למעבר בין שדות (כמו Tab) ---
+        function updateTracker(step) {
+            for (let i = 1; i <= totalSteps; i++) {
+                const ind = document.getElementById(`ind-${i}`);
+                const text = document.getElementById(`ind-text-${i}`);
+
+                if (i < step) {
+                    ind.className = "w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold bg-emerald-500 text-white transition-all shadow-md cursor-pointer hover:bg-emerald-600 hover:scale-105";
+                    ind.innerHTML = "✓";
+                    text.className = "mt-3 text-sm font-bold text-emerald-600";
+                } else if (i === step) {
+                    ind.className = "w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold bg-blue-600 text-white transition-all ring-8 ring-blue-100 shadow-lg scale-110 cursor-pointer";
+                    ind.innerHTML = i;
+                    text.className = "mt-3 text-sm font-bold text-blue-700";
+                } else {
+                    ind.className = "w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold bg-slate-200 text-slate-400 transition-all shadow-inner cursor-pointer hover:bg-slate-300 hover:scale-105";
+                    ind.innerHTML = i;
+                    text.className = "mt-3 text-sm font-semibold text-slate-400";
+                }
+            }
+        }
+
+        function showError(msg) {
+            const errDiv = document.getElementById('global-error');
+            errDiv.innerText = msg;
+            errDiv.classList.remove('hidden');
+        }
+
+        function hideError() {
+            document.getElementById('global-error').classList.add('hidden');
+        }
+
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Enter') {
+                e.preventDefault();
                 const active = document.activeElement;
-
-                // אנחנו מתערבים רק אם המשתמש נמצא בתוך שדה קלט
                 if (active.tagName === 'INPUT') {
-                    e.preventDefault(); // מניעת התנהגות ברירת מחדל כמו ריענון העמוד
-
-                    const currentPageEl = document.getElementById('page-' + currentPage);
-                    if (!currentPageEl) return;
-
-                    // שולפים את כל שדות הקלט שגלויים כרגע בדף הנוכחי
-                    const inputs = Array.from(currentPageEl.querySelectorAll('input')).filter(el => el.offsetParent !== null && !el.disabled);
-                    const currentIndex = inputs.indexOf(active);
-
-                    if (currentIndex > -1) {
-                        if (currentIndex < inputs.length - 1) {
-                            // אם זה לא השדה האחרון, קפוץ לשדה הבא
-                            inputs[currentIndex + 1].focus();
-                        } else {
-                            // אם זה השדה האחרון, לחץ אוטומטית על הכפתור המרכזי של הדף (המשך / חשב)
-                            if (currentPage === 4) {
-                                validateAndCalculate();
-                            } else if (currentPage < 5) {
-                                validateAndNext(currentPage);
-                            }
-                        }
+                    const stepDiv = document.getElementById(currentStep <= totalSteps ? `step-${currentStep}` : 'step-result');
+                    const inputs = Array.from(stepDiv.querySelectorAll('input:not([type="hidden"]):not([disabled])')).filter(i => i.offsetParent !== null);
+                    const index = inputs.indexOf(active);
+                    if (index > -1 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    } else {
+                        const btn = stepDiv.querySelector('.next-btn');
+                        if (btn) btn.click();
                     }
                 }
             }
         });
 
-        window.onload = function () {
-            addTimeRow();
-            // הצגת הדף הראשון בעת טעינה
-            showPage(1);
-        };
+        function toggleTab(tabId) {
+            activeTab = tabId;
+            const btnAdv = document.getElementById('tab-btn-advanced');
+            const btnReg = document.getElementById('tab-btn-regular');
+
+            if (tabId === 'advanced') {
+                document.getElementById('tab-advanced').classList.remove('hidden');
+                document.getElementById('tab-advanced').classList.add('block');
+                document.getElementById('tab-regular').classList.add('hidden');
+                document.getElementById('tab-regular').classList.remove('block');
+
+                btnAdv.className = "flex-1 py-3 rounded-md bg-white shadow-sm font-bold text-teal-700 border-t-2 border-teal-500 transition-all";
+                btnReg.className = "flex-1 py-3 rounded-md font-bold text-slate-500 hover:bg-slate-200 transition-all border-t-2 border-transparent";
+            } else {
+                document.getElementById('tab-regular').classList.remove('hidden');
+                document.getElementById('tab-regular').classList.add('block');
+                document.getElementById('tab-advanced').classList.remove('block');
+                document.getElementById('tab-advanced').classList.add('hidden');
+
+                btnReg.className = "flex-1 py-3 rounded-md bg-white shadow-sm font-bold text-teal-700 border-t-2 border-teal-500 transition-all";
+                btnAdv.className = "flex-1 py-3 rounded-md font-bold text-slate-500 hover:bg-slate-200 transition-all border-t-2 border-transparent";
+            }
+        }
+
+        function addRow() {
+            const table = document.getElementById("hours-table").getElementsByTagName('tbody')[0];
+            const row = table.insertRow();
+            row.className = "border-b border-slate-100 hover:bg-slate-50";
+            row.innerHTML = `
+                <td class="p-2"><input type="time" class="time-in w-full bg-slate-100 border-none rounded p-2 text-center focus:bg-white focus:ring-1 focus:ring-teal-400 outline-none" value="08:00" onchange="calculateTableHours()"></td>
+                <td class="p-2"><input type="time" class="time-out w-full bg-slate-100 border-none rounded p-2 text-center focus:bg-white focus:ring-1 focus:ring-teal-400 outline-none" value="17:00" onchange="calculateTableHours()"></td>
+                <td class="p-2 font-bold text-slate-800 row-total">0.00</td>
+                <td class="p-2 font-bold text-green-600 row-100">0.00</td>
+                <td class="p-2 font-bold text-yellow-500 row-125">0.00</td>
+                <td class="p-2 font-bold text-red-500 row-150">0.00</td>
+                <td class="p-2"><button onclick="removeRow(this)" class="text-slate-400 hover:text-red-600 font-bold text-lg">&times;</button></td>
+            `;
+            calculateTableHours();
+        }
+
+        function removeRow(btn) {
+            const row = btn.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            calculateTableHours();
+        }
+
+        let tableCalcData = { regular: 0, ot125: 0, ot150: 0, days: 0 };
+
+        function calculateTableHours() {
+            const tbody = document.getElementById("hours-table").getElementsByTagName('tbody')[0];
+            let total100 = 0, total125 = 0, total150 = 0;
+            tableCalcData = { regular: 0, ot125: 0, ot150: 0, days: 0 };
+
+            for (let i = 0; i < tbody.rows.length; i++) {
+                const timeIn = tbody.rows[i].querySelector('.time-in').value;
+                const timeOut = tbody.rows[i].querySelector('.time-out').value;
+
+                let rowH = 0, row100 = 0, row125 = 0, row150 = 0;
+
+                if (timeIn && timeOut) {
+                    const start = new Date("1970-01-01 " + timeIn);
+                    let end = new Date("1970-01-01 " + timeOut);
+                    if (end < start) end.setDate(end.getDate() + 1);
+
+                    rowH = (end - start) / (1000 * 60 * 60);
+                    tableCalcData.days += 1;
+
+                    if (rowH <= 8) {
+                        row100 = rowH;
+                    } else if (rowH <= 10) {
+                        row100 = 8;
+                        row125 = rowH - 8;
+                    } else {
+                        row100 = 8;
+                        row125 = 2;
+                        row150 = rowH - 10;
+                    }
+
+                    total100 += row100;
+                    total125 += row125;
+                    total150 += row150;
+                }
+
+                tbody.rows[i].querySelector('.row-total').innerText = rowH.toFixed(2);
+                tbody.rows[i].querySelector('.row-100').innerText = row100.toFixed(2);
+                tbody.rows[i].querySelector('.row-125').innerText = row125.toFixed(2);
+                tbody.rows[i].querySelector('.row-150').innerText = row150.toFixed(2);
+            }
+
+            tableCalcData.regular = total100;
+            tableCalcData.ot125 = total125;
+            tableCalcData.ot150 = total150;
+
+            document.getElementById("tbl-total-100").innerText = total100.toFixed(2);
+            document.getElementById("tbl-total-125").innerText = total125.toFixed(2);
+            document.getElementById("tbl-total-150").innerText = total150.toFixed(2);
+        }
+
+        function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
+
+        function processFinalCalculation() {
+            if (!validateSpecificStep(4)) {
+                showError("נא למלא את כל שדות החובה כדי להמשיך.");
+                return;
+            }
+            hideError();
+
+            const monthInput = document.getElementById('salary-month').value;
+            let displayMonth = "-";
+            if (monthInput) {
+                const [year, month] = monthInput.split('-');
+                displayMonth = `<span class="inline-flex items-center gap-1.5" dir="rtl"><span>${year}</span><span class="text-blue-400 font-bold">/</span><span>${month}</span></span>`;
+            }
+
+            document.getElementById('res-name').innerText = document.getElementById('f-name').value + " " + document.getElementById('l-name').value;
+            document.getElementById('res-workplace').innerText = document.getElementById('workplace').value;
+            document.getElementById('res-role').innerText = document.getElementById('role').value;
+            document.getElementById('res-month').innerHTML = displayMonth;
+
+            const grossInput = getVal('gross-salary');
+            const hourly = getVal('hourly-wage');
+            const travel = getVal('travel-expenses');
+            const taxPts = getVal('tax-points');
+            const voluntaryDeduction = getVal('voluntary-deduction');
+
+            const vacDays = getVal('vacation-days');
+            const sickDaysInput = getVal('sick-days');
+            const unpaidDays = getVal('unpaid-days');
+
+            let baseSalary = 0;
+            let totalHours = 0;
+            let totalDays = 0;
+            let regPay = 0, ot125Pay = 0, ot150Pay = 0;
+            let unpaidDeduction = 0;
+
+            const shiftHoursVal = 10.5;
+            const dailyWage = hourly > 0 ? (hourly * shiftHoursVal) : (grossInput / 22);
+
+            if (grossInput > 0) {
+                baseSalary = grossInput;
+                totalHours = getVal('total-hours');
+                totalDays = getVal('total-days');
+
+                if (unpaidDays > 0) {
+                    unpaidDeduction = (grossInput / 22) * unpaidDays;
+                    baseSalary -= unpaidDeduction;
+                }
+
+                document.getElementById('res-row-regular').classList.add('hidden');
+                document.getElementById('res-row-ot125').classList.add('hidden');
+                document.getElementById('res-row-ot150').classList.add('hidden');
+            } else {
+                if (activeTab === 'regular') {
+                    totalHours = getVal('total-hours');
+                    totalDays = getVal('total-days');
+
+                    let regH = Math.min(totalDays * 8, totalHours);
+                    let rem = totalHours - regH;
+                    let ot125H = Math.min(totalDays * 2, rem);
+                    let ot150H = rem - ot125H;
+
+                    regPay = regH * hourly;
+                    ot125Pay = ot125H * hourly * 1.25;
+                    ot150Pay = ot150H * hourly * 1.5;
+                } else {
+                    totalDays = tableCalcData.days;
+                    totalHours = tableCalcData.regular + tableCalcData.ot125 + tableCalcData.ot150;
+
+                    regPay = tableCalcData.regular * hourly;
+                    ot125Pay = tableCalcData.ot125 * hourly * 1.25;
+                    ot150Pay = tableCalcData.ot150 * hourly * 1.5;
+                }
+
+                baseSalary = regPay + ot125Pay + ot150Pay;
+
+                if (regPay > 0) { document.getElementById('res-row-regular').classList.remove('hidden'); document.getElementById('res-base-pay').innerText = regPay.toFixed(2) + " ₪"; }
+                if (ot125Pay > 0) { document.getElementById('res-row-ot125').classList.remove('hidden'); document.getElementById('res-ot125').innerText = ot125Pay.toFixed(2) + " ₪"; }
+                if (ot150Pay > 0) { document.getElementById('res-row-ot150').classList.remove('hidden'); document.getElementById('res-ot150').innerText = ot150Pay.toFixed(2) + " ₪"; }
+            }
+
+            if (unpaidDeduction > 0) {
+                document.getElementById('res-row-unpaid').classList.remove('hidden');
+                document.getElementById('res-unpaid').innerText = unpaidDeduction.toFixed(2) + " ₪";
+            } else {
+                document.getElementById('res-row-unpaid').classList.add('hidden');
+            }
+
+            let vacPay = vacDays * dailyWage;
+            let sickPay = 0;
+            for (let i = 1; i <= sickDaysInput; i++) {
+                if (i === 1) sickPay += 0;
+                else if (i === 2 || i === 3) sickPay += (dailyWage * 0.5);
+                else sickPay += dailyWage;
+            }
+
+            const finalGross = baseSalary + vacPay + sickPay + travel;
+
+            let incomeTax = 0;
+            let tempGross = finalGross;
+            if (tempGross > 0) {
+                let brackets = [{ limit: 7010, rate: 0.10 }, { limit: 10060, rate: 0.14 }, { limit: 16150, rate: 0.20 }, { limit: 22440, rate: 0.31 }, { limit: 46690, rate: 0.35 }];
+                let prevLimit = 0;
+                for (let b of brackets) {
+                    if (finalGross > prevLimit) {
+                        let amountInBracket = Math.min(finalGross - prevLimit, b.limit - prevLimit);
+                        incomeTax += amountInBracket * b.rate;
+                    }
+                    prevLimit = b.limit;
+                }
+                incomeTax -= (taxPts * 242);
+                if (incomeTax < 0) incomeTax = 0;
+            }
+
+            let btl = 0, health = 0;
+            const reducedLimit = 7522;
+
+            if (finalGross <= reducedLimit) {
+                btl = finalGross * 0.004;
+                health = finalGross * 0.031;
+            } else {
+                btl = (reducedLimit * 0.004) + ((finalGross - reducedLimit) * 0.0287);
+                health = (reducedLimit * 0.031) + ((finalGross - reducedLimit) * 0.05);
+            }
+
+            const netSalary = finalGross - incomeTax - btl - health - voluntaryDeduction;
+
+            document.getElementById('res-gross').innerText = (grossInput > 0 ? grossInput.toFixed(2) : finalGross.toFixed(2)) + " ₪";
+            document.getElementById('res-hourly').innerText = hourly.toFixed(2) + " ₪";
+            document.getElementById('res-hours').innerText = totalHours.toFixed(2);
+            document.getElementById('res-days').innerText = totalDays;
+
+            document.getElementById('res-travel').innerText = travel.toFixed(2) + " ₪";
+            document.getElementById('res-vacation').innerText = vacPay.toFixed(2) + " ₪";
+            document.getElementById('res-sick').innerText = sickPay.toFixed(2) + " ₪";
+
+            document.getElementById('res-tax').innerText = incomeTax.toFixed(2) + " ₪";
+            document.getElementById('res-btl').innerText = btl.toFixed(2) + " ₪";
+            document.getElementById('res-health').innerText = health.toFixed(2) + " ₪";
+
+            if (voluntaryDeduction > 0) {
+                document.getElementById('res-box-voluntary').classList.remove('hidden');
+                document.getElementById('res-voluntary').innerText = voluntaryDeduction.toFixed(2) + " ₪";
+            } else {
+                document.getElementById('res-box-voluntary').classList.add('hidden');
+            }
+
+            document.getElementById('res-net').innerText = netSalary.toFixed(2) + " ₪";
+            goToStep(5);
+        }
+
+        function clearData() {
+            document.getElementById('gross-salary').value = '';
+            document.getElementById('hourly-wage').value = '';
+            document.getElementById('salary-month').value = '';
+            document.getElementById('tax-points').value = '2.25';
+
+            document.getElementById('total-hours').value = '';
+            document.getElementById('total-days').value = '';
+
+            document.getElementById('vacation-days').value = '0';
+            document.getElementById('sick-days').value = '0';
+            document.getElementById('unpaid-days').value = '0';
+            document.getElementById('travel-expenses').value = '';
+            document.getElementById('voluntary-deduction').value = '0';
+
+            const tbody = document.getElementById("hours-table").getElementsByTagName('tbody')[0];
+            tbody.innerHTML = `
+                <tr class="border-b border-slate-100 hover:bg-slate-50">
+                    <td class="p-2"><input type="time" class="time-in w-full bg-slate-100 border-none rounded p-2 text-center focus:bg-white focus:ring-1 focus:ring-teal-400 outline-none" value="08:00" onchange="calculateTableHours()"></td>
+                    <td class="p-2"><input type="time" class="time-out w-full bg-slate-100 border-none rounded p-2 text-center focus:bg-white focus:ring-1 focus:ring-teal-400 outline-none" value="17:00" onchange="calculateTableHours()"></td>
+                    <td class="p-2 font-bold text-slate-800 row-total">0.00</td>
+                    <td class="p-2 font-bold text-green-600 row-100">0.00</td>
+                    <td class="p-2 font-bold text-yellow-500 row-125">0.00</td>
+                    <td class="p-2 font-bold text-red-500 row-150">0.00</td>
+                    <td class="p-2"><button onclick="removeRow(this)" class="text-slate-400 hover:text-red-600 font-bold text-lg">&times;</button></td>
+                </tr>`;
+            calculateTableHours();
+
+            hideError();
+            document.querySelectorAll('input').forEach(i => i.classList.remove('border-red-500', 'bg-red-50'));
+            attemptGoToStep(2);
+        }
+
+        // Extremely robust smart printing with Highly Compact CSS
+        function printPayslip() {
+            const toast = document.getElementById('toast-msg');
+            const toastText = document.getElementById('toast-text');
+            const toastIcon = document.getElementById('toast-icon');
+
+            const isIframe = (window.self !== window.top);
+
+            if (isIframe) {
+                toastIcon.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                `;
+                toastText.innerHTML = `
+                    <div class="flex flex-col gap-1">
+                        <span class="font-extrabold text-amber-400">המערכת פועלת בתצוגה מקדימה!</span>
+                        <span class="text-xs text-slate-300">אנו מנסים לפתוח חלון הדפסה נקי. אם החלון נחסם על ידי הדפדפן, אנא הפעל את האפליקציה ישירות דרך הקישור ב-GitHub Pages.</span>
+                    </div>
+                `;
+                toast.className = "fixed bottom-6 right-6 bg-slate-900 border border-slate-700 text-white p-5 rounded-2xl shadow-2xl transform transition-all duration-500 z-50 max-w-md translate-y-0 opacity-100";
+            } else {
+                toastIcon.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                `;
+                toastText.innerHTML = `
+                    <div class="flex flex-col gap-1">
+                        <span class="font-extrabold text-emerald-400">מכין את התלוש להדפסה...</span>
+                        <span class="text-xs text-slate-300">חלון ההדפסה ייפתח כעת באופן אוטומטי.</span>
+                    </div>
+                `;
+                toast.className = "fixed bottom-6 right-6 bg-slate-900 border border-slate-700 text-white p-5 rounded-2xl shadow-2xl transform transition-all duration-500 z-50 max-w-md translate-y-0 opacity-100";
+            }
+
+            setTimeout(() => {
+                toast.className = "fixed bottom-6 right-6 bg-slate-900 border border-slate-700 text-white p-5 rounded-2xl shadow-2xl transform transition-all duration-500 z-50 max-w-md translate-y-32 opacity-0";
+            }, 6000);
+
+            const printContent = document.getElementById('step-result').cloneNode(true);
+            const noPrintElements = printContent.querySelectorAll('.no-print');
+            noPrintElements.forEach(el => el.remove());
+
+            try {
+                const printWindow = window.open('', '_blank');
+                if (printWindow) {
+                    printWindow.document.write(`
+                        <html lang="he" dir="rtl">
+                        <head>
+                            <title>תלוש שכר - ${document.getElementById('res-name').innerText}</title>
+                            <script src="https://cdn.tailwindcss.com"><\/script>
+                            <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+                            <style>
+                                body { font-family: 'Heebo', sans-serif; background-color: white; padding: 15px; }
+                                .payslip-scroll { max-height: none !important; overflow: visible !important; border: none !important; }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="max-w-3xl mx-auto">
+                                ${printContent.innerHTML}
+                            </div>
+                            <script>
+                                window.onload = function() {
+                                    window.focus();
+                                    window.print();
+                                    setTimeout(function() { window.close(); }, 500);
+                                };
+                            <\/script>
+                        </body>
+                        </html>
+                    `);
+                    printWindow.document.close();
+                } else {
+                    window.print();
+                }
+            } catch (e) {
+                window.print();
+            }
+        }
+
     </script>
 </body>
 
